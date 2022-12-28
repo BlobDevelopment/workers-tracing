@@ -1,0 +1,8 @@
+name = "basic"
+compatibility_date = "2022-12-27"
+main = "index.ts"
+
+[[kv_namespaces]]
+binding = "KV"
+id = "a"
+preview_id = "a"

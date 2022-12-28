@@ -1,0 +1,8 @@
+name = "service-binding"
+compatibility_date = "2022-12-27"
+main = "index.ts"
+
+[[services]]
+binding = "SERVICE"
+service = "basic"
+environment = "production"

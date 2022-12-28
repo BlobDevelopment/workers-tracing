@@ -1,0 +1,22 @@
+{
+  "name": "workers-opentelemetry",
+  "main": "index.js",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [
+    "workers",
+    "opentelemetry",
+    "cloudflare",
+    "cloudflare workers",
+    "tracing"
+  ],
+  "author": "Daniel Walsh (@WalshyDev)",
+  "license": "MIT",
+  "scripts": {
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^3.18.0",
+    "vitest": "^0.26.2"
+  }
+}
