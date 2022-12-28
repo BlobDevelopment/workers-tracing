@@ -1,4 +1,4 @@
-import { Trace } from './tracing';
+import { Span, Trace } from './tracing';
 
 export function createTrace(req: Request, env: unknown, ctx: ExecutionContext, tracerOptions: TracerOptions): Trace {
 	// This is ugly
@@ -25,4 +25,23 @@ export function createTrace(req: Request, env: unknown, ctx: ExecutionContext, t
 	});
 
 	return trace;
+}
+
+export function traceFn<T>(
+	traceOrSpan: Trace | Span,
+	name: string,
+	fn: (...args: any[]) => T,
+	opts?: SpanCreationOptions
+): T {
+	const span = traceOrSpan.startSpan(name, opts);
+
+	const value = fn();
+
+	if (value instanceof Promise) {
+		value.finally(() => span.end());
+		return value;
+	}
+	
+	span.end();
+	return value;
 }

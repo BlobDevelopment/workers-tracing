@@ -1,6 +1,5 @@
-// import { setupTracing } from 'workers-opentelemtry';
-import { createTrace } from 'src/index';
-import { Span, Trace } from 'src/tracing';
+import { createTrace, traceFn } from 'src/index';
+import { Trace } from 'src/tracing';
 
 interface Env {
 	AUTH_TOKEN: string;
@@ -19,7 +18,7 @@ export default {
 			}
 		});
 
-		await this.tracedFetch(trace, 'https://cherryjimbo.sucks/');
+		await traceFn(trace, 'fetch', () => fetch('https://cherryjimbo.sucks/'));
 
 		return this.handleRequest(req, env, trace);
 	},
@@ -28,20 +27,13 @@ export default {
 		const { pathname } = new URL(req.url);
 		const span = trace.startSpan('handleRequest', { attributes: { path: pathname } });
 
-		await this.tracedFetch(span, 'https://cherryjimbo.sucks/');
-		await this.tracedFetch(span, 'https://cherryjimbo.sucks/');
+		await traceFn(span, 'fetch', () => fetch('https://cherryjimbo.sucks/'));
+		await traceFn(span, 'fetch', () => fetch('https://cherryjimbo.sucks/'));
 
-		const kvSpan = span.startSpan('kv get', { attributes: { key: 'abc' } });
-		const val = await env.KV.get('abc');
-		kvSpan.end();
+		const val = await traceFn(span, 'kv get', () => env.KV.get('abc'), { attributes: { key: 'abc '} });
 
 		span.end();
 		await trace.send();
 		return new Response('ok');
 	},
-
-	async tracedFetch(trace: Trace | Span, request: Request | string, requestInitr?: RequestInit | Request): Promise<Response> {
-		const span = trace.startSpan('fetch');
-		return fetch(request, requestInitr).then((res) => { span.end(); return res });
-	}
 }
