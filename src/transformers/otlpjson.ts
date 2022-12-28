@@ -1,20 +1,64 @@
 import { Span, Trace } from 'src/tracing';
 import { Transformer } from './transformer';
 
-interface Value {
+export interface OtlpJsonTrace {
+	resourceSpans: OtlpResourceSpan[];
+}
+
+interface OtlpResourceSpan {
+	resource: OtlpResource;
+	scopeSpans: OtlpScopeSpan[];
+}
+
+interface OtlpResource {
+	attributes: OtlpAttribute[];
+}
+
+interface OtlpScopeSpan {
+	scope: OtlpScope;
+	spans: OtlpSpan[];
+}
+
+interface OtlpScope {
+	name: string;
+}
+
+interface OtlpSpan {
+	traceId: string;
+	spanId: string;
+	name: string;
+	kind: number;
+	startTimeUnixNano: number;
+	endTimeUnixNano: number;
+	attributes: OtlpAttribute[];
+	events: any[];
+	status: OtlpStatus;
+	links: any[];
+}
+
+interface OtlpStatus {
+	code: number;
+}
+
+interface OtlpAttribute {
+	key: string;
+	value: OtlpValue;
+}
+
+interface OtlpValue {
 	stringValue?: string;
 	intValue?: number;
 	boolValue?: boolean;
 	// double?
 
-	arrayValue?: { values: Value[] };
+	arrayValue?: { values: OtlpValue[] };
 }
 
-type TransformValue = (value: Attribute) => Value | null;
+type TransformValue = (value: Attribute) => OtlpValue | null;
 
 export class OtlpJson extends Transformer {
 
-	transform(trace: Trace): object {
+	transform(trace: Trace): OtlpJsonTrace {
 		return {
 			resourceSpans: [
 				{
@@ -40,12 +84,12 @@ export class OtlpJson extends Transformer {
 		};
 	}
 
-	transformAttributes(attributes: Attributes) {
-		const transformed = [];
+	transformAttributes(attributes: Attributes): OtlpAttribute[] {
+		const transformed: OtlpAttribute[] = [];
 
 		const transformValue: TransformValue = (value: Attribute) => {
 			if (Array.isArray(value)) {
-				const values: Value[] = [];
+				const values: OtlpValue[] = [];
 
 				for (const val of value) {
 					const transformed = transformValue(val);
@@ -70,9 +114,12 @@ export class OtlpJson extends Transformer {
 		}
 
 		for (const [key, value] of Object.entries(attributes)) {
+			const transformedValue = transformValue(value);
+			if (transformedValue === null) continue; // Skip invalid values
+
 			transformed.push({
 				key: key,
-				value: transformValue(value),
+				value: transformedValue,
 			})
 		}
 

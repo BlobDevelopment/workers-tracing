@@ -28,6 +28,10 @@ export class Trace {
 		console.log('made new trace, root span:', this.#rootSpan.getData());
 	}
 
+	getTraceId() {
+		return this.#traceId;
+	}
+
 	getSpanId() {
 		return this.#rootSpan.getSpanId();
 	}
@@ -64,6 +68,8 @@ export class Trace {
 		const headers = this.#tracerOptions.collector.headers || {};
 		// @ts-ignore
 		headers['Content-Type'] = 'application/json';
+		// @ts-ignore		
+		headers['x-trace-id'] = this.#traceId;
 
 		let body;
 		if (this.#tracerOptions.transformer) {
