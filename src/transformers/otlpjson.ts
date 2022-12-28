@@ -49,7 +49,7 @@ interface OtlpValue {
 	stringValue?: string;
 	intValue?: number;
 	boolValue?: boolean;
-	// double?
+	// TODO: double?
 
 	arrayValue?: { values: OtlpValue[] };
 }

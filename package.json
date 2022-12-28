@@ -1,18 +1,34 @@
 {
-  "name": "workers-opentelemetry",
+  "name": "workers-tracing",
   "main": "index.js",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.1.0",
+  "description": "Ena",
+	"author": "Daniel Walsh (@WalshyDev)",
+  "license": "MIT",
+	"exports": {
+		".": {
+			"require": "./dist/workers-tracing.cjs",
+			"import": "./dist/workers-tracing.esm",
+			"types": "./dist/"
+		}
+	},
+	"files": [
+		"dist/"
+	],
   "keywords": [
     "workers",
-    "opentelemetry",
+    "tracing",
+		"opentelemetry",
     "cloudflare",
     "cloudflare workers",
-    "tracing"
+		"jaeger"
   ],
-  "author": "Daniel Walsh (@WalshyDev)",
-  "license": "MIT",
   "scripts": {
+		"build": "npm run build:esm && npm run build:cjs",
+		"build:esm": "esbuild --format=esm --platform=neutral --bundle --minify --sourcemap --outfile=dist/workers-tracing.esm src/index.ts",
+		"build:cjs": "esbuild --format=cjs --platform=neutral --bundle --minify --sourcemap --outfile=dist/workers-tracing.cjs src/index.ts",
+		"build:types": "tsc --emitDeclarationOnly --outDir dist",
+		"record-sizes": "npm run build && gzip dist/workers-tracing.esm dist/workers-tracing.cjs && npm run build",
     "test": "vitest"
   },
   "devDependencies": {

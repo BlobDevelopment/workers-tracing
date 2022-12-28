@@ -1,4 +1,4 @@
-import { createTrace } from 'src/setup';
+import { createTrace } from 'src/index';
 
 interface Env {}
 
