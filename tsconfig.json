@@ -1,11 +1,11 @@
 {
-  "compilerOptions": {
-    "target": "es2016",
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "skipLibCheck": true,
+	"compilerOptions": {
+		"target": "es2016",
+		"module": "commonjs",
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"strict": true,
+		"skipLibCheck": true,
 		"composite": true,
 		"lib": ["ES2020"],
 		"types": ["@cloudflare/workers-types"],
@@ -13,5 +13,5 @@
 		"paths": {
 			"src/*": ["*"]
 		}
-  }
+	}
 }

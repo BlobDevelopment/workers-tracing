@@ -25,7 +25,7 @@ interface DevOptions {
 			bucket_name: string;
 			preview_bucket_name?: string;
 	}[];
-	d1Databases?:  {
+	d1Databases?: {
 		binding: string;
 		database_name: string;
 		database_id: string;

@@ -1,10 +1,10 @@
 {
-  "name": "workers-tracing",
-  "main": "index.js",
-  "version": "0.1.0",
-  "description": "Ena",
+	"name": "workers-tracing",
+	"main": "index.js",
+	"version": "0.1.0",
+	"description": "Ena",
 	"author": "Daniel Walsh (@WalshyDev)",
-  "license": "MIT",
+	"license": "MIT",
 	"exports": {
 		".": {
 			"require": "./dist/workers-tracing.cjs",
@@ -17,25 +17,25 @@
 		"README.md",
 		"LICENSE"
 	],
-  "keywords": [
-    "workers",
-    "tracing",
+	"keywords": [
+		"workers",
+		"tracing",
 		"opentelemetry",
-    "cloudflare",
-    "cloudflare workers",
+		"cloudflare",
+		"cloudflare workers",
 		"jaeger"
-  ],
-  "scripts": {
+	],
+	"scripts": {
 		"build": "npm run build:esm && npm run build:cjs",
 		"build:esm": "esbuild --format=esm --platform=neutral --bundle --minify --sourcemap --outfile=dist/workers-tracing.esm src/index.ts",
 		"build:cjs": "esbuild --format=cjs --platform=neutral --bundle --minify --sourcemap --outfile=dist/workers-tracing.cjs src/index.ts",
 		"build:types": "tsc --emitDeclarationOnly --outDir dist",
 		"record-sizes": "npm run build && gzip dist/workers-tracing.esm dist/workers-tracing.cjs && npm run build",
-    "test": "vitest"
-  },
-  "devDependencies": {
-    "@cloudflare/workers-types": "^3.18.0",
-    "vitest": "^0.26.2",
-    "wrangler": "^2.6.2"
-  }
+		"test": "vitest"
+	},
+	"devDependencies": {
+		"@cloudflare/workers-types": "^3.18.0",
+		"vitest": "^0.26.2",
+		"wrangler": "^2.6.2"
+	}
 }
