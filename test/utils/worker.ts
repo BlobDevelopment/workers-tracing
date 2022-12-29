@@ -40,19 +40,31 @@ interface DevOptions {
 }
 
 // If there's errors in tests, worth changing this to "debug"
-const LOG_LEVEL = 'error';
+const LOG_LEVEL: 'none' | 'info' | 'error' | 'log' | 'warn' | 'debug' = 'error';
 
-export function startWorker(scriptPath: string, opts?: DevOptions): Promise<UnstableDevWorker> {
-	return unstable_dev(scriptPath, {
+export async function startWorker(scriptPath: string, opts?: DevOptions): Promise<UnstableDevWorker> {
+	if (LOG_LEVEL === 'debug') {
+		console.log(`Starting ${scriptPath}`);
+	}
+	const worker = await unstable_dev(scriptPath, {
 		bundle: true,
 		local: true,
 		logLevel: LOG_LEVEL,
 		...opts,
 	});
+
+	if (LOG_LEVEL === 'debug') {
+		console.log(`Started ${scriptPath} - address: ${worker.address}, port: ${worker.port}`);
+	}
+
+	return worker;
 }
 
-export function startCollector(opts: DevOptions & { port: number }): Promise<UnstableDevWorker> {
-	return unstable_dev('test/scripts/collector.ts', {
+export async function startCollector(opts: DevOptions & { port: number }): Promise<UnstableDevWorker> {
+	if (LOG_LEVEL === 'debug') {
+		console.log(`Starting collector`);
+	}
+	const worker = await unstable_dev('test/scripts/collector.ts', {
 		bundle: true,
 		local: true,
 		kv: [{
@@ -62,4 +74,10 @@ export function startCollector(opts: DevOptions & { port: number }): Promise<Uns
 		logLevel: LOG_LEVEL,
 		...opts,
 	});
+
+	if (LOG_LEVEL === 'debug') {
+		console.log(`Started collector - address: ${worker.address}, port: ${worker.port}`);
+	}
+
+	return worker;
 }

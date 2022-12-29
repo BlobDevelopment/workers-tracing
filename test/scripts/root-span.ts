@@ -7,7 +7,7 @@ export default {
 		const trace = createTrace(req, env, ctx, {
 			serviceName: 'root-span',
 			collector: {
-				url: 'http://localhost:4318/v1/traces',
+				url: 'http://0.0.0.0:4318/v1/traces',
 			}
 		});
 

@@ -9,7 +9,7 @@ export default {
 		const trace = createTrace(req, env, ctx, {
 			serviceName: 'resource-attributes',
 			collector: {
-				url: 'http://localhost:9411/api/v2/spans', // Zipkin compatible Jaeger endpoint
+				url: 'http://0.0.0.0:9411/api/v2/spans', // Zipkin compatible Jaeger endpoint
 			},
 			transformer: new ZipkinTransformer(),
 			resource: {
