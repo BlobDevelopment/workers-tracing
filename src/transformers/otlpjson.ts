@@ -66,7 +66,7 @@ export class OtlpJson extends Transformer {
 						attributes: this.transformAttributes(
 							{
 								'service.name': trace.getTracerOptions().serviceName,
-								...trace.getRootSpan().getData().attributes
+								...trace.getData().attributes
 							}
 						),
 					},
@@ -154,29 +154,18 @@ export class OtlpJson extends Transformer {
 		};
 	}
 
-	collectSpans(traceSpan: Trace | Span): Span[] {
+	collectSpans(span: Span): Span[] {
 		const spans = [];
 
-		console.log(`collectSpans(${traceSpan.getSpanId()})`);
+		console.log(`collectSpans(${span.getSpanId()})`);
+		spans.push(span);
 
-		// This is a trace
-		if ("getRootSpan" in traceSpan) {
-			console.log('collectSpans looking at trace');
-			spans.push(traceSpan.getRootSpan());
-			spans.push(...traceSpan.getSpans());
-			console.log('  added ' + traceSpan.getSpans().length + ' spans');
-
-			for (const span of traceSpan.getSpans()) {
-				spans.push(...this.collectSpans(span));
-			}
-		} else {
-			console.log('collectSpans looking at span');
-			spans.push(...traceSpan.getChildSpans());
-			console.log('  added ' + traceSpan.getChildSpans().length + ' child spans');
-			for (const childSpan of traceSpan.getChildSpans()) {
-				spans.push(...this.collectSpans(childSpan));
-			}
+		// Go through children and collect them all
+		for (const childSpan of span.getChildSpans()) {
+			spans.push(...this.collectSpans(childSpan));
 		}
+
+		console.log('  added ' + span.getChildSpans().length + ' spans');
 
 		return spans;
 	}
