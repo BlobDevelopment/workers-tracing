@@ -24,10 +24,12 @@ export default {
 		const { pathname } = new URL(req.url);
 		const span = trace.startSpan('handleRequest', { attributes: { path: pathname } });
 
+		await env.KV.put('abc', 'def');
+
 		const val = await traceFn(span, 'kv get', () => env.KV.get('abc'), { attributes: { key: 'abc '} });
 
 		span.end();
 		await trace.send();
-		return new Response('ok');
+		return new Response(val);
 	},
 }
