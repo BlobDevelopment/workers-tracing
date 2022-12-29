@@ -1,12 +1,23 @@
 import { traceFn } from './index';
 import { OtlpJson } from './transformers/otlpjson';
 import { Transformer } from './transformers/transformer';
+import ATTRIBUTE_NAME from './utils/constants';
 import { generateSpanId, generateTraceId } from './utils/rand';
 
 enum StatusCode {
 	UNSET = 0,
 	OK 		= 1,
 	ERROR = 2,
+}
+
+export function getDefaultAttributes(opts: TracerOptions): Attributes {
+	return {
+		[ATTRIBUTE_NAME.SERVICE_NAME]: opts.serviceName,
+		[ATTRIBUTE_NAME.SDK_NAME]: 'workers-tracing',
+		[ATTRIBUTE_NAME.SDK_LANG]: 'javascript',
+		[ATTRIBUTE_NAME.SDK_VERSION]: '$VERSION$', // TODO: define in esbuild
+		[ATTRIBUTE_NAME.RUNTIME_NAME]: navigator.userAgent, // Cloudflare-Workers
+	}
 }
 
 export class Span {
@@ -28,6 +39,10 @@ export class Span {
 			links: spanOptions?.links ?? [],
 		};
 		this.#childSpans = [];
+	}
+
+	getTraceId() {
+		return this.#span.traceId;
 	}
 
 	getSpanId() {
@@ -79,6 +94,7 @@ export class Trace extends Span {
 			'Request (fetch event)',
 			{
 				parentId: tracerOptions.traceContext?.spanId,
+				attributes: getDefaultAttributes(tracerOptions),
 			}
 		);
 		this.#ctx = ctx;
@@ -106,7 +122,7 @@ export class Trace extends Span {
 		// @ts-ignore
 		headers['Content-Type'] = 'application/json';
 		// @ts-ignore		
-		headers['x-trace-id'] = this.#traceId;
+		headers['x-trace-id'] = this.getTraceId();
 
 		let body;
 		if (this.#tracerOptions.transformer) {

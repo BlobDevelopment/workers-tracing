@@ -65,7 +65,6 @@ export class OtlpJson extends Transformer {
 					resource: {
 						attributes: this.transformAttributes(
 							{
-								'service.name': trace.getTracerOptions().serviceName,
 								...trace.getData().attributes
 							}
 						),
