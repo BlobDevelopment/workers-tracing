@@ -26,8 +26,8 @@ export const SPAN_NAME = Object.freeze({
 	// KV
 	KV_GET: 'kv:get',
 	KV_GET_METADATA: 'kv:getWithMetadata',
-	KV_GET_LIST: 'kv:list',
-	KV_GET_DELETE: 'kv:delete',
+	KVLIST: 'kv:list',
+	KV_DELETE: 'kv:delete',
 	// Durable Object
 	DO_FETCH: 'durable_object:fetch',
 	DO_ALARM: 'durable_object:alarm',

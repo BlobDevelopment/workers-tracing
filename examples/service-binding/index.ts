@@ -1,6 +1,7 @@
 // import { setupTracing } from 'workers-opentelemtry';
 import { createTrace } from 'src/index';
 import { Span, Trace } from 'src/tracing';
+import { SPAN_NAME } from 'src/utils/constants';
 
 interface Env {
 	AUTH_TOKEN: string;
@@ -26,7 +27,7 @@ export default {
 		const { pathname } = new URL(req.url);
 		const span = trace.startSpan('handleRequest', { attributes: { path: pathname } });
 
-		const serviceBindingSpan = span.startSpan('service binding', { attributes: { service: 'basic' } });
+		const serviceBindingSpan = span.startSpan(SPAN_NAME.SERVICE_FETCH, { attributes: { service: 'basic' } });
 		const res = await env.SERVICE.fetch('https://service/test', { headers: { 'x-trace-id': `${serviceBindingSpan.getContext().traceId}:${serviceBindingSpan.getContext().spanId}` }});
 		serviceBindingSpan.end();
 

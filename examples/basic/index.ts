@@ -1,5 +1,6 @@
 import { createTrace, traceFn } from 'src/index';
 import { Trace } from 'src/tracing';
+import { SPAN_NAME } from 'src/utils/constants';
 
 interface Env {
 	AUTH_TOKEN: string;
@@ -15,7 +16,7 @@ export default {
 			}
 		});
 
-		await traceFn(trace, 'fetch', () => fetch('https://cherryjimbo.sucks/'));
+		await traceFn(trace, SPAN_NAME.FETCH, () => fetch('https://cherryjimbo.sucks/'));
 
 		return this.handleRequest(req, env, trace);
 	},
@@ -26,7 +27,7 @@ export default {
 
 		await env.KV.put('abc', 'def');
 
-		const val = await traceFn(span, 'kv get', () => env.KV.get('abc'), { attributes: { key: 'abc '} });
+		const val = await traceFn(span, SPAN_NAME.KV_GET, () => env.KV.get('abc'), { attributes: { key: 'abc '} });
 
 		span.end();
 		await trace.send();
