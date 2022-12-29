@@ -144,3 +144,5 @@ interface ResourceOptions {
 type CfWithTrace = IncomingRequestCfProperties & {
 	traceContext?: SpanContext;
 }
+
+type TracedFn<T> = (...args: any[]) => T;

@@ -28,12 +28,12 @@ export function createTrace(req: Request, env: unknown, ctx: ExecutionContext, t
 }
 
 export function traceFn<T>(
-	traceOrSpan: Trace | Span,
+	parent: Span,
 	name: string,
 	fn: (...args: any[]) => T,
 	opts?: SpanCreationOptions
 ): T {
-	const span = traceOrSpan.startSpan(name, opts);
+	const span = parent.startSpan(name, opts);
 
 	const value = fn();
 

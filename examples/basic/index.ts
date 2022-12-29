@@ -12,9 +12,6 @@ export default {
 			serviceName: 'basic-worker-tracing',
 			collector: {
 				url: 'http://localhost:4318/v1/traces',
-				headers: {
-					Authorization: `Bearer ${env.AUTH_TOKEN}`,
-				}
 			}
 		});
 
@@ -26,9 +23,6 @@ export default {
 	async handleRequest(req: Request, env: Env, trace: Trace) {
 		const { pathname } = new URL(req.url);
 		const span = trace.startSpan('handleRequest', { attributes: { path: pathname } });
-
-		await traceFn(span, 'fetch', () => fetch('https://cherryjimbo.sucks/'));
-		await traceFn(span, 'fetch', () => fetch('https://cherryjimbo.sucks/'));
 
 		const val = await traceFn(span, 'kv get', () => env.KV.get('abc'), { attributes: { key: 'abc '} });
 
