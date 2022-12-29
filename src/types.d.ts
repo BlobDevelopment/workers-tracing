@@ -52,10 +52,10 @@ interface SpanData {
 	status: Status;
 
 	// Events
-	events: Event[];
+	events: SpanEvent[];
 
 	// Links to spans in this or other traces
-	links: Link[];
+	links: SpanLink[];
 }
 
 interface SpanCreationOptions {
@@ -79,10 +79,10 @@ interface SpanCreationOptions {
 	status?: Status;
 
 	// Events
-	events?: Event[];
+	events?: SpanEvent[];
 
 	// Links to spans in this or other traces
-	links?: Link[];
+	links?: SpanLink[];
 }
 
 interface Attributes {
@@ -108,19 +108,19 @@ interface OtherStatus {
 	code: StatusCode;
 }
 
-interface Event {
+interface SpanEvent {
 	// Name of the event
 	name: string;
+
+	// Time of the event, this will be when the event is added if no timestamp is provided
+	timestamp: number;
 
 	// Attributes (or tags) attached to the span. These can be used to attach details like URL path, status code, etc.
 	// https://opentelemetry.io/docs/reference/specification/common/#attribute
 	attributes?: Attributes;
-
-	// Time of the event, this will be when the event is added if no timestamp is provided
-	time: number[];
 }
 
-interface Link {
+interface SpanLink {
 	context: SpanContext;
 	attributes: Attributes;
 }
@@ -130,6 +130,7 @@ interface TracerOptions {
 	collector: CollectorOptions;
 	resource?: ResourceOptions;
 	traceContext?: SpanContext;
+	transformer?: any; // TODO: Move to CollectorOptions
 }
 
 interface CollectorOptions {

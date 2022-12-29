@@ -1,4 +1,3 @@
-import { OtlpJsonTrace } from 'src/transformers/otlpjson';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { UnstableDevWorker } from 'wrangler';
 import { getTrace } from './utils/trace';
@@ -9,7 +8,7 @@ let collectorWorker: UnstableDevWorker;
 
 describe('createTrace should work', () => {
 	beforeAll(async () => {
-		collectorWorker = await startCollector();
+		collectorWorker = await startCollector({ port: 4318 });
 	});
 
 	afterEach(async () => {

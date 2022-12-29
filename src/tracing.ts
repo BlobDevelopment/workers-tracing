@@ -1,7 +1,7 @@
 import { traceFn } from './index';
-import { OtlpJson } from './transformers/otlpjson';
-import { Transformer } from './transformers/transformer';
-import ATTRIBUTE_NAME from './utils/constants';
+import { OtlpJsonTransformer } from './transformers/otlpjson';
+import { TraceTransformer } from './transformers/transformer';
+import { ATTRIBUTE_NAME } from './utils/constants';
 import { generateSpanId, generateTraceId } from './utils/rand';
 
 enum StatusCode {
@@ -78,6 +78,10 @@ export class Span {
 		return traceFn(this, name, fn, opts);
 	}
 
+	addEvent(event: SpanEvent) {
+		this.#span.events.push(event);
+	}
+
 	end() {
 		this.#span.duration = Date.now() - this.#span.timestamp;
 	}
@@ -86,9 +90,9 @@ export class Span {
 export class Trace extends Span {
 
 	#ctx: ExecutionContext;
-	#tracerOptions: TracerOptions & { transformer?: Transformer };
+	#tracerOptions: TracerOptions & { transformer?: TraceTransformer };
 
-	constructor(ctx: ExecutionContext, tracerOptions: TracerOptions & { transformer?: Transformer }) {
+	constructor(ctx: ExecutionContext, tracerOptions: TracerOptions & { transformer?: TraceTransformer }) {
 		super(
 			tracerOptions.traceContext?.traceId ?? generateTraceId(),
 			'Request (fetch event)',
@@ -128,7 +132,7 @@ export class Trace extends Span {
 		if (this.#tracerOptions.transformer) {
 			body = this.#tracerOptions.transformer.transform(this);
 		} else {
-			body = new OtlpJson().transform(this);
+			body = new OtlpJsonTransformer().transform(this);
 		}
 
 		const bodyStr = JSON.stringify(body);

@@ -1,5 +1,6 @@
 import { createTrace, traceFn } from 'src/index';
 import { Trace } from 'src/tracing';
+import { ZipkinTransformer } from 'src/transformers/zipkin';
 import { SPAN_NAME } from 'src/utils/constants';
 
 interface Env {
@@ -12,8 +13,9 @@ export default {
 		const trace = createTrace(req, env, ctx, {
 			serviceName: 'basic-worker-tracing',
 			collector: {
-				url: 'http://localhost:4318/v1/traces',
-			}
+				url: 'http://localhost:9411/api/v2/spans',
+			},
+			transformer: new ZipkinTransformer(),
 		});
 
 		await traceFn(trace, SPAN_NAME.FETCH, () => fetch('https://example.com/'));

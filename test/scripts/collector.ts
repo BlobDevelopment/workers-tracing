@@ -8,8 +8,10 @@ export default {
 	async fetch(req: Request, env: Env) {
 		const { pathname } = new URL(req.url);
 
-		// Run on /v1/traces which is where my test Workers will send (Jaeger route)
-		if (pathname === '/v1/traces') {
+		if (
+			pathname === '/v1/traces' // Jaeger OTLP
+			|| pathname === '/api/v2/spans' // Jaeger Zipkin
+		) {
 			const body = await req.json();
 
 			const traceId = req.headers.get('x-trace-id');

@@ -1,14 +1,16 @@
 import { createTrace } from 'src/index';
+import { ZipkinTransformer } from 'src/transformers/zipkin';
 
 interface Env {}
 
 export default {
 	async fetch(req: Request, env: Env, ctx: ExecutionContext) {
 		const trace = createTrace(req, env, ctx, {
-			serviceName: 'root-span',
+			serviceName: 'zipkin-basic',
 			collector: {
-				url: 'http://localhost:4318/v1/traces',
-			}
+				url: 'http://localhost:9411/api/v2/spans', // Zipkin compatible Jaeger endpoint
+			},
+			transformer: new ZipkinTransformer(),
 		});
 
 		await trace.send();

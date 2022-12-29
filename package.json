@@ -20,9 +20,10 @@
 	"keywords": [
 		"workers",
 		"tracing",
-		"opentelemetry",
 		"cloudflare",
 		"cloudflare workers",
+		"opentelemetry",
+		"zipkin",
 		"jaeger"
 	],
 	"scripts": {

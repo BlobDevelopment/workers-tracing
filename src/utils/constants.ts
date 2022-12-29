@@ -1,14 +1,14 @@
-const ATTRIBUTE_NAME = Object.freeze({
+export const ATTRIBUTE_NAME = Object.freeze({
 	SERVICE_NAME: 'service.name',
 	SERVICE_VERSION: 'service.version',
 
 	OTLP_STATUS_CODE: 'otel.status_code',
 	ERROR: 'error',
-	
+
 	SDK_NAME: 'telemetry.sdk.name',
 	SDK_VERSION: 'telemetry.sdk.version',
 	SDK_LANG: 'telemetry.sdk.language',
-	
+
 	RUNTIME_NAME: 'process.runtime.name',
 	RUNTIME_VERSION: 'process.runtime.version',
 	RUNTIME_DESCRIPTION: 'process.runtime.description',
@@ -26,7 +26,7 @@ export const SPAN_NAME = Object.freeze({
 	// KV
 	KV_GET: 'kv:get',
 	KV_GET_METADATA: 'kv:getWithMetadata',
-	KVLIST: 'kv:list',
+	KV_LIST: 'kv:list',
 	KV_DELETE: 'kv:delete',
 	// Durable Object
 	DO_FETCH: 'durable_object:fetch',
@@ -45,5 +45,3 @@ export const SPAN_NAME = Object.freeze({
 	// Queues
 	QUEUE_SEND: 'queue:send',
 });
-
-export default ATTRIBUTE_NAME;

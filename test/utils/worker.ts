@@ -39,25 +39,27 @@ interface DevOptions {
 	logPrefix?: string;
 }
 
-export function startWorker(script: string, opts?: DevOptions): Promise<UnstableDevWorker> {
-	return unstable_dev(script, {
+// If there's errors in tests, worth changing this to "debug"
+const LOG_LEVEL = 'error';
+
+export function startWorker(scriptPath: string, opts?: DevOptions): Promise<UnstableDevWorker> {
+	return unstable_dev(scriptPath, {
 		bundle: true,
-		port: 3000,
 		local: true,
+		logLevel: LOG_LEVEL,
 		...opts,
 	});
 }
 
-export async function startCollector(): Promise<UnstableDevWorker> {
-	const worker = await unstable_dev('test/scripts/collector.ts', {
+export function startCollector(opts: DevOptions & { port: number }): Promise<UnstableDevWorker> {
+	return unstable_dev('test/scripts/collector.ts', {
 		bundle: true,
-		port: 4318,
 		local: true,
 		kv: [{
 			binding: 'KV',
 			id: 'collector',
 		}],
+		logLevel: LOG_LEVEL,
+		...opts,
 	});
-
-	return worker;
 }

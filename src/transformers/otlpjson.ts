@@ -1,5 +1,5 @@
 import { Span, Trace } from 'src/tracing';
-import { Transformer } from './transformer';
+import { TraceTransformer } from './transformer';
 
 export interface OtlpJsonTrace {
 	resourceSpans: OtlpResourceSpan[];
@@ -56,7 +56,7 @@ interface OtlpValue {
 
 type TransformValue = (value: Attribute) => OtlpValue | null;
 
-export class OtlpJson extends Transformer {
+export class OtlpJsonTransformer extends TraceTransformer {
 
 	transform(trace: Trace): OtlpJsonTrace {
 		return {
@@ -134,13 +134,13 @@ export class OtlpJson extends Transformer {
 			parentSpanId: data.parentId,
 			name: data.name,
 			kind: 0, // TODO: Implement kind (https://opentelemetry.io/docs/reference/specification/trace/api/#spankind)
-			startTimeUnixNano: data.timestamp * 1e6/*BigInt(data.timestamp * 1e6)*/,
-			endTimeUnixNano: (data.timestamp + data.duration) * 1e6/*BigInt((data.timestamp + data.duration) * 1e6)*/,
+			startTimeUnixNano: data.timestamp * 1e6,
+			endTimeUnixNano: (data.timestamp + data.duration) * 1e6,
 			attributes: this.transformAttributes(data.attributes),
 			events: data.events.map((event) => (
 				{
 					name: event.name,
-					timeUnixNano: event.timeStamp * 1e6/*BigInt(event.timeStamp * 1e6)*/,
+					timeUnixNano: event.timestamp * 1e6,
 					attributes: this.transformAttributes(event.attributes || {}),
 				}
 			)),
