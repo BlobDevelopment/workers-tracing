@@ -1,5 +1,5 @@
 import { traceFn } from './index';
-import { OtlpJsonTransformer } from './transformers/otlpjson';
+import { OtlpTransformer } from './transformers/otlp';
 import { TraceTransformer } from './transformers/transformer';
 import { ATTRIBUTE_NAME } from './utils/constants';
 import { generateSpanId, generateTraceId } from './utils/rand';
@@ -151,7 +151,7 @@ export class Trace extends Span {
 		if (this.#tracerOptions.transformer) {
 			body = this.#tracerOptions.transformer.transform(this);
 		} else {
-			body = new OtlpJsonTransformer().transform(this);
+			body = new OtlpTransformer().transform(this);
 		}
 
 		const bodyStr = JSON.stringify(body);

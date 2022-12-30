@@ -1,7 +1,7 @@
 import { Span, Trace } from 'src/tracing';
 import { TraceTransformer } from './transformer';
 
-export interface OtlpJsonTrace {
+export interface OtlpJson {
 	resourceSpans: OtlpResourceSpan[];
 }
 
@@ -56,9 +56,9 @@ interface OtlpValue {
 
 type TransformValue = (value: Attribute) => OtlpValue | null;
 
-export class OtlpJsonTransformer extends TraceTransformer {
+export class OtlpTransformer extends TraceTransformer {
 
-	transform(trace: Trace): OtlpJsonTrace {
+	transform(trace: Trace): OtlpJson {
 		return {
 			resourceSpans: [
 				{
