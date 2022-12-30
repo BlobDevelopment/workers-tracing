@@ -65,7 +65,7 @@ export class OtlpJsonTransformer extends TraceTransformer {
 					resource: {
 						attributes: this.transformAttributes(
 							{
-								...trace.getData().attributes
+								...trace.getTracerOptions().resource?.attributes,
 							}
 						),
 					},

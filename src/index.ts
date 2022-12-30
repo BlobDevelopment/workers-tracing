@@ -1,6 +1,12 @@
 import { Span, Trace } from './tracing';
 
-export function createTrace(req: Request, env: unknown, ctx: ExecutionContext, tracerOptions: TracerOptions): Trace {
+export function createTrace(
+	req: Request,
+	env: unknown,
+	ctx: ExecutionContext,
+	tracerOptions: TracerOptions,
+	spanOptions?: SpanCreationOptions,
+): Trace {
 	// This is ugly
 	// TODO: Fix this
 	let parentContext: SpanContext | undefined;
@@ -22,7 +28,7 @@ export function createTrace(req: Request, env: unknown, ctx: ExecutionContext, t
 	const trace = new Trace(ctx, {
 		traceContext: parentContext,
 		...tracerOptions
-	});
+	}, spanOptions);
 
 	return trace;
 }

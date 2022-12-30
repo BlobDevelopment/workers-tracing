@@ -91,21 +91,15 @@ interface Attributes {
 
 type Attribute = string | number | boolean | string[] | number[] | boolean[];
 
-type Status = ErrorStatus | OtherStatus;
+interface Status {
+	code: StatusCode;
+	message?: string;
+}
 
 enum StatusCode {
 	UNSET = 0,
 	OK 		= 1,
 	ERROR = 2,
-}
-
-interface ErrorStatus {
-	code: StatusCode.ERROR;
-	message?: string;
-}
-
-interface OtherStatus {
-	code: StatusCode;
 }
 
 interface SpanEvent {

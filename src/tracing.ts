@@ -4,7 +4,7 @@ import { TraceTransformer } from './transformers/transformer';
 import { ATTRIBUTE_NAME } from './utils/constants';
 import { generateSpanId, generateTraceId } from './utils/rand';
 
-enum StatusCode {
+export enum StatusCode {
 	UNSET = 0,
 	OK 		= 1,
 	ERROR = 2,
@@ -78,6 +78,10 @@ export class Span {
 		return traceFn(this, name, fn, opts);
 	}
 
+	setStatus(status: StatusCode, message?: string) {
+		this.#span.status = { code: status, message };
+	}
+
 	addEvent(event: SpanEvent) {
 		this.#span.events.push(event);
 	}
@@ -92,17 +96,32 @@ export class Trace extends Span {
 	#ctx: ExecutionContext;
 	#tracerOptions: TracerOptions & { transformer?: TraceTransformer };
 
-	constructor(ctx: ExecutionContext, tracerOptions: TracerOptions & { transformer?: TraceTransformer }) {
+	constructor(
+		ctx: ExecutionContext,
+		tracerOptions: TracerOptions & { transformer?: TraceTransformer },
+		spanOptions?: SpanCreationOptions
+	) {
 		super(
 			tracerOptions.traceContext?.traceId ?? generateTraceId(),
 			'Request (fetch event)',
 			{
 				parentId: tracerOptions.traceContext?.spanId,
-				attributes: getDefaultAttributes(tracerOptions),
+				...spanOptions,
 			}
 		);
 		this.#ctx = ctx;
 		this.#tracerOptions = tracerOptions;
+
+		if (!this.#tracerOptions.resource) {
+			this.#tracerOptions.resource = { attributes: getDefaultAttributes(tracerOptions) };
+		} else if (!this.#tracerOptions.resource.attributes) {
+			this.#tracerOptions.resource.attributes = getDefaultAttributes(tracerOptions);
+		} else {
+			this.#tracerOptions.resource.attributes = {
+				...getDefaultAttributes(tracerOptions),
+				...this.#tracerOptions.resource.attributes,
+			};
+		}
 
 		console.log('made new trace, root span:', this.getData());
 	}

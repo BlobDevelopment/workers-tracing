@@ -38,7 +38,7 @@ export class ZipkinTransformer extends TraceTransformer {
 
 			if (span instanceof Trace) {
 				// In the case of Zipkin, we want to put resource attributes on the span
-				data.attributes = { ...data.attributes, ...span.getTracerOptions().resource?.attributes };
+				data.attributes = { ...span.getTracerOptions().resource?.attributes, ...data.attributes };
 			}
 
 			const tags: ZipkinTags = {};
