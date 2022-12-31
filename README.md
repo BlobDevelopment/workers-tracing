@@ -6,6 +6,10 @@ There are currently 2 different formats supported:
 - [OpenTelemtry](https://opentelemetry.io/) is a standard tracing/metrics/logs format. It has wide support in many different services such as [Jaeger](https://www.jaegertracing.io/).
 - [Zipkin](https://zipkin.io/) is another widely adopted format which is focused on tracing.
 
+> **Warning**
+> This library is in beta, consider any minor version change a possibly breaking change. I will try to keep compatibiltiy for at least 1 version but cannot guarantee it.
+> Please provide feedback in [Issues](https://github.com/BlobDevelopment/workers-tracing/issues)
+
 > **Note**
 > This is an opinionated library, it does not use the standard patterns and base libraries.
 > This was done very intentionally, we believe this libary is much cleaner (and just lighter) than the standard libraries.
