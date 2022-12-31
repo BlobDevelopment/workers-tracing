@@ -155,21 +155,25 @@ export class Trace extends Span {
 
 		const bodyStr = JSON.stringify(body);
 
-		/* -- DEBUG
-		const res = await fetch(this.#tracerOptions.collector.url, {
-			method: 'POST',
-			headers,
-			body: bodyStr,
-		});
+		// If we're in Miniflare, we wait for the fetch to complete.
+		// This is mainly for tests but helpful for local testing too
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+		// @ts-ignore
+		if (globalThis.MINIFLARE) {
+			const res = await fetch(this.#tracerOptions.collector.url, {
+				method: 'POST',
+				headers,
+				body: bodyStr,
+			});
 
-		const txt = await res.text();
-		console.log(txt);
-		*/
-
-		this.#ctx.waitUntil(fetch(this.#tracerOptions.collector.url, {
-			method: 'POST',
-			headers,
-			body: bodyStr,
-		}));
+			const txt = await res.text();
+			console.log(txt);
+		} else {
+			this.#ctx.waitUntil(fetch(this.#tracerOptions.collector.url, {
+				method: 'POST',
+				headers,
+				body: bodyStr,
+			}));
+		}
 	}
 }
