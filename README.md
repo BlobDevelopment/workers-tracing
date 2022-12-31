@@ -1,6 +1,6 @@
 # Workers Tracing
 
-Workers tracing is a small (~2.6 KB compressed) and quick library for having distributed tracing within [Cloudflare Workers](https://workers.cloudflare.com/).
+Workers tracing is a small (~2.6 KB compressed), zero-dependency library for having distributed tracing within [Cloudflare Workers](https://workers.cloudflare.com/).
 
 There are currently 2 different formats supported:
 - [OpenTelemtry](https://opentelemetry.io/) is a standard tracing/metrics/logs format. It has wide support in many different services such as [Jaeger](https://www.jaegertracing.io/).

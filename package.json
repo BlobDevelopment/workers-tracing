@@ -38,9 +38,12 @@
 		"record-sizes": "rm -rf dist && npm run build && gzip dist/workers-tracing.esm dist/workers-tracing.cjs && npm run build && ls -lah dist",
 		"test": "vitest",
 		"lint": "eslint --ext js,ts src test",
-		"lint:fix": "eslint --fix --ext js,ts src test"
+		"lint:fix": "eslint --fix --ext js,ts src test",
+		"changeset": "npx changeset"
 	},
 	"devDependencies": {
+		"@changesets/changelog-github": "^0.4.8",
+		"@changesets/cli": "^2.26.0",
 		"@cloudflare/workers-types": "^3.18.0",
 		"@typescript-eslint/eslint-plugin": "^5.47.1",
 		"@typescript-eslint/parser": "^5.47.1",
