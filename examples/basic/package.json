@@ -1,0 +1,15 @@
+{
+  "name": "basic",
+  "version": "1.0.0",
+  "main": "basic.js",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "start": "wrangler dev --local basic.ts",
+    "js": "wrangler dev --local basic.js",
+    "ts": "wrangler dev --local basic.ts"
+  },
+  "dependencies": {
+    "workers-tracing": "^0.1.0"
+  }
+}

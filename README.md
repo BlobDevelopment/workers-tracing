@@ -26,31 +26,86 @@ npm install --save workers-tracing
 ### JavaScript
 
 ```js
-import { setupTracing } from 'workers-tracing';
+import { createTrace, SPAN_NAME, ATTRIBUTE_NAME } from 'workers-tracing';
 
 export default {
-	fetch(req, env, ctx) {
-		const tracing = createTrace(req, env, ctx, {
+	async fetch(req, env, ctx) {
+		const trace = createTrace(req, env, ctx, {
+			serviceName: 'basic-worker-tracing',
 			collector: {
-				url: 'https://tracing.example.com/v1/collect',
-				headers: {
-					Authorization: `Bearer ${env.AUTH_TOKEN}`,
-				}
-			}
+				url: 'http://localhost:4318/v1/traces',
+			},
 		});
 
-		return this.handleRequest(req, tracing);
+		return this.handleRequest(req, env, trace);
 	},
 
-	handleRequest(req, tracing) {
-		tracing.addSpan('handleRequest', { tags: { path: req.url.toString() } });
+	async handleRequest(req, env, trace) {
+		const { pathname } = new URL(req.url);
+		const span = trace.startSpan('handleRequest', { attributes: { path: pathname } });
 
-		// ... logic stuff
-	}
-}
+		await env.KV.put('abc', 'def');
+
+		// .trace will return the value from the passed function
+		// In this case, it'll return the KV value
+		const val = await trace.trace(SPAN_NAME.KV_GET,
+			() => env.KV.get('abc'),
+			// There are a bunch of built in attribute/span names which you can use
+			// This will allow you to ensure consistency in naming throughout your Workers
+			{ attributes: { [ATTRIBUTE_NAME.KV_KEY]: 'abc '} },
+		);
+		span.addEvent({ name: 'KV lookup', timestamp: Date.now(), attributes: { [ATTRIBUTE_NAME.KV_KEY]: 'abc' } });
+
+		span.end();
+		await trace.send();
+		return new Response(val);
+	},
+};
 ```
+(see more in the [examples folder](https://github.com/BlobDevelopment/workers-tracing/tree/main/examples))
 
 ### TypeScript
+
+```ts
+import { createTrace, Trace, SPAN_NAME, ATTRIBUTE_NAME } from 'workers-tracing';
+
+interface Env {
+	KV: KVNamespace;
+}
+
+export default {
+	async fetch(req: Request, env: Env, ctx: ExecutionContext) {
+		const trace = createTrace(req, env, ctx, {
+			serviceName: 'basic-worker-tracing',
+			collector: {
+				url: 'http://localhost:4318/v1/traces',
+			},
+		});
+
+		return this.handleRequest(req, env, trace);
+	},
+
+	async handleRequest(req: Request, env: Env, trace: Trace) {
+		const { pathname } = new URL(req.url);
+		const span = trace.startSpan('handleRequest', { attributes: { path: pathname } });
+
+		await env.KV.put('abc', 'def');
+
+		// .trace will return the value from the passed function
+		// In this case, it'll return the KV value
+		const val = await trace.trace(SPAN_NAME.KV_GET,
+			() => env.KV.get('abc'),
+			{ attributes: { [ATTRIBUTE_NAME.KV_KEY]: 'abc '} },
+		);
+		span.addEvent({ name: 'KV lookup', timestamp: Date.now(), attributes: { [ATTRIBUTE_NAME.KV_KEY]: 'abc' } });
+
+		span.end();
+		await trace.send();
+		return new Response(val);
+	},
+};
+```
+(see more in the [examples folder](https://github.com/BlobDevelopment/workers-tracing/tree/main/examples))
 
 ### Jaeger
 

@@ -1,9 +1,6 @@
-import { createTrace, traceFn } from 'src/trace';
-import { Trace } from 'src/tracing';
-import { ATTRIBUTE_NAME, SPAN_NAME } from 'src/utils/constants';
+import { createTrace, Trace, SPAN_NAME, ATTRIBUTE_NAME } from 'workers-tracing';
 
 interface Env {
-	AUTH_TOKEN: string;
 	KV: KVNamespace;
 }
 
@@ -13,10 +10,8 @@ export default {
 			serviceName: 'basic-worker-tracing',
 			collector: {
 				url: 'http://localhost:4318/v1/traces',
-			}
+			},
 		});
-
-		await traceFn(trace, SPAN_NAME.FETCH, () => fetch('https://example.com/'));
 
 		return this.handleRequest(req, env, trace);
 	},
@@ -27,11 +22,16 @@ export default {
 
 		await env.KV.put('abc', 'def');
 
-		const val = await traceFn(span, SPAN_NAME.KV_GET, () => env.KV.get('abc'), { attributes: { [ATTRIBUTE_NAME.KV_KEY]: 'abc '} });
+		// .trace will return the value from the passed function
+		// In this case, it'll return the KV value
+		const val = await trace.trace(SPAN_NAME.KV_GET,
+			() => env.KV.get('abc'),
+			{ attributes: { [ATTRIBUTE_NAME.KV_KEY]: 'abc '} },
+		);
 		span.addEvent({ name: 'KV lookup', timestamp: Date.now(), attributes: { [ATTRIBUTE_NAME.KV_KEY]: 'abc' } });
 
 		span.end();
 		await trace.send();
 		return new Response(val);
 	},
-}
+};

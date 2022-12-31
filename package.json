@@ -1,7 +1,7 @@
 {
 	"name": "workers-tracing",
-	"version": "0.1.0",
-	"description": "Ena",
+	"version": "0.0.0",
+	"description": "Enable tracing within Workers with this simple package! Simply trace and send to a collector with a compatible export format",
 	"author": "Daniel Walsh (@WalshyDev)",
 	"license": "MIT",
 	"type": "module",
