@@ -12,11 +12,10 @@
 		".": {
 			"require": "./dist/workers-tracing.cjs",
 			"import": "./dist/workers-tracing.mjs",
-			"types": "./dist/"
+			"types": "./dist/index.d.ts"
 		}
 	},
 	"files": [
-		"src",
 		"dist/",
 		"README.md",
 		"LICENSE"
