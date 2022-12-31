@@ -6,12 +6,12 @@
 	"license": "MIT",
 	"type": "module",
 	"main": "dist/workers-tracing.cjs",
-	"module": "dist/workers-tracing.esm",
+	"module": "dist/workers-tracing.mjs",
 	"types": "dist/index.d.ts",
 	"exports": {
 		".": {
 			"require": "./dist/workers-tracing.cjs",
-			"import": "./dist/workers-tracing.esm",
+			"import": "./dist/workers-tracing.mjs",
 			"types": "./dist/"
 		}
 	},
@@ -35,7 +35,7 @@
 		"build:esm": "node build.js esm",
 		"build:cjs": "node build.js cjs",
 		"build:types": "tsc -p tsconfig.emit.json",
-		"record-sizes": "rm -rf dist && npm run build && gzip dist/workers-tracing.esm dist/workers-tracing.cjs && npm run build && ls -lah dist",
+		"record-sizes": "rm -rf dist && npm run build && gzip dist/workers-tracing.mjs dist/workers-tracing.cjs && npm run build && ls -lah dist",
 		"test": "vitest",
 		"test:ci": "vitest run --watch false",
 		"lint": "eslint --ext js,ts src test",
