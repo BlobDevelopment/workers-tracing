@@ -23,12 +23,6 @@ jobs:
     - name: Install deps
       run: npm ci
 
-    - name: Lint
-      run: npm run lint
-
-    - name: Run tests
-      run: npm run test:ci
-
     - name: Check size
       run: npm run record-sizes
 
