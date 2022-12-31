@@ -1,12 +1,14 @@
-interface TraceData {
+import { StatusCode } from './tracing';
+
+export interface TraceData {
 	// 8 bit field currently only used to indicate sampling
 	// https://www.w3.org/TR/trace-context/#trace-flags
 	flags?: number;
 
-	spans: Span[];
+	spans: SpanData[];
 }
 
-interface SpanContext {
+export interface SpanContext {
 	// Globally unique ID for this specific trace event
 	// 16 bytes, should be random rather than computed.
 	// https://www.w3.org/TR/trace-context/#trace-id
@@ -18,7 +20,7 @@ interface SpanContext {
 	spanId: string;
 }
 
-interface SpanData {
+export interface SpanData {
 	// Globally unique ID for this specific trace event
 	// 16 bytes, should be random rather than computed.
 	// https://www.w3.org/TR/trace-context/#trace-id
@@ -58,7 +60,7 @@ interface SpanData {
 	links: SpanLink[];
 }
 
-interface SpanCreationOptions {
+export interface SpanCreationOptions {
 	// Span ID of the parent or undefined if there is no parent present.
 	// https://www.w3.org/TR/trace-context/#parent-id
 	parentId?: string;
@@ -85,24 +87,18 @@ interface SpanCreationOptions {
 	links?: SpanLink[];
 }
 
-interface Attributes {
+export interface Attributes {
 	[key: string]: Attribute;
 }
 
-type Attribute = string | number | boolean | string[] | number[] | boolean[];
+export type Attribute = string | number | boolean | string[] | number[] | boolean[];
 
-interface Status {
+export interface Status {
 	code: StatusCode;
 	message?: string;
 }
 
-enum StatusCode {
-	UNSET = 0,
-	OK 		= 1,
-	ERROR = 2,
-}
-
-interface SpanEvent {
+export interface SpanEvent {
 	// Name of the event
 	name: string;
 
@@ -114,12 +110,12 @@ interface SpanEvent {
 	attributes?: Attributes;
 }
 
-interface SpanLink {
+export interface SpanLink {
 	context: SpanContext;
 	attributes: Attributes;
 }
 
-interface TracerOptions {
+export interface TracerOptions {
 	serviceName: string;
 	collector: CollectorOptions;
 	resource?: ResourceOptions;
@@ -127,17 +123,17 @@ interface TracerOptions {
 	transformer?: unknown; // TODO: Move to CollectorOptions
 }
 
-interface CollectorOptions {
+export interface CollectorOptions {
 	url: string;
 	headers?: HeadersInit;
 }
 
-interface ResourceOptions {
+export interface ResourceOptions {
 	attributes?: Attributes;
 }
 
-type CfWithTrace = IncomingRequestCfProperties & {
+export type CfWithTrace = IncomingRequestCfProperties & {
 	traceContext?: SpanContext;
 }
 
-type TracedFn<T> = (...args: unknown[]) => T;
+export type TracedFn<T> = (...args: unknown[]) => T;

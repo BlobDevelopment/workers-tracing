@@ -1,10 +1,12 @@
 {
 	"name": "workers-tracing",
-	"main": "index.js",
 	"version": "0.1.0",
 	"description": "Ena",
 	"author": "Daniel Walsh (@WalshyDev)",
 	"license": "MIT",
+	"main": "dist/workers-tracing.cjs",
+	"module": "dist/workers-tracing.esm",
+	"types": "dist/index.d.ts",
 	"exports": {
 		".": {
 			"require": "./dist/workers-tracing.cjs",
@@ -13,6 +15,7 @@
 		}
 	},
 	"files": [
+		"src",
 		"dist/",
 		"README.md",
 		"LICENSE"
@@ -27,10 +30,11 @@
 		"jaeger"
 	],
 	"scripts": {
-		"build": "npm run build:esm && npm run build:cjs",
+		"build": "rm -rf dist && npm run build:esm && npm run build:cjs && npm run build:types",
 		"build:esm": "esbuild --format=esm --platform=neutral --bundle --minify --sourcemap --outfile=dist/workers-tracing.esm src/index.ts",
 		"build:cjs": "esbuild --format=cjs --platform=neutral --bundle --minify --sourcemap --outfile=dist/workers-tracing.cjs src/index.ts",
-		"build:types": "tsc --emitDeclarationOnly --outDir dist",
+		"build:types": "tsc src/*.ts src/**/*.ts --declaration --emitDeclarationOnly --outDir dist --types @cloudflare/workers-types",
+		"build:types2": "tsc -p tsconfig.emit.json",
 		"record-sizes": "rm -rf dist && npm run build && gzip dist/workers-tracing.esm dist/workers-tracing.cjs && npm run build && ls -lah dist",
 		"test": "vitest",
 		"lint": "eslint --ext js,ts src test",

@@ -1,4 +1,4 @@
-import { createTrace } from 'src/index';
+import { createTrace } from 'src/trace';
 import { StatusCode } from 'src/tracing';
 
 interface Env {}

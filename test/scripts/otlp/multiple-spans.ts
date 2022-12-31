@@ -1,4 +1,4 @@
-import { createTrace } from 'src/index';
+import { createTrace } from 'src/trace';
 import { OtlpTransformer } from 'src/transformers/otlp';
 import { SPAN_NAME } from 'src/utils/constants';
 

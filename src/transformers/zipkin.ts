@@ -3,7 +3,7 @@ import { TraceTransformer } from './transformer';
 
 export type ZipkinJson = ZipkinSpan[];
 
-interface ZipkinSpan {
+export interface ZipkinSpan {
 	traceId: string;
 	name: string;
 	id: string; // Span ID
@@ -15,15 +15,15 @@ interface ZipkinSpan {
 	annotations?: ZipkinAnnotation[];
 }
 
-interface ZipkinEndpoint {
+export interface ZipkinEndpoint {
 	serviceName: string;
 }
 
-interface ZipkinTags {
+export interface ZipkinTags {
 	[key: string]: string;
 }
 
-interface ZipkinAnnotation {
+export interface ZipkinAnnotation {
 	timestamp: number; // Microseconds
 	value: string;
 }

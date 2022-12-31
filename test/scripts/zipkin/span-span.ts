@@ -1,4 +1,4 @@
-import { createTrace } from 'src/index';
+import { createTrace } from 'src/trace';
 import { ZipkinTransformer } from 'src/transformers/zipkin';
 import { SPAN_NAME } from 'src/utils/constants';
 

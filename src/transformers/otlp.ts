@@ -1,29 +1,30 @@
 import { Span, Trace } from 'src/tracing';
 import { TraceTransformer } from './transformer';
+import type { Attribute, Attributes } from 'src/types';
 
 export interface OtlpJson {
 	resourceSpans: OtlpResourceSpan[];
 }
 
-interface OtlpResourceSpan {
+export interface OtlpResourceSpan {
 	resource: OtlpResource;
 	scopeSpans: OtlpScopeSpan[];
 }
 
-interface OtlpResource {
+export interface OtlpResource {
 	attributes: OtlpAttribute[];
 }
 
-interface OtlpScopeSpan {
+export interface OtlpScopeSpan {
 	scope: OtlpScope;
 	spans: OtlpSpan[];
 }
 
-interface OtlpScope {
+export interface OtlpScope {
 	name: string;
 }
 
-interface OtlpSpan {
+export interface OtlpSpan {
 	traceId: string;
 	spanId: string;
 	parentSpanId?: string;
@@ -37,16 +38,16 @@ interface OtlpSpan {
 	links: OtlpLink[];
 }
 
-interface OtlpStatus {
+export interface OtlpStatus {
 	code: number;
 }
 
-interface OtlpAttribute {
+export interface OtlpAttribute {
 	key: string;
 	value: OtlpValue;
 }
 
-interface OtlpValue {
+export interface OtlpValue {
 	stringValue?: string;
 	intValue?: number;
 	boolValue?: boolean;
@@ -55,19 +56,19 @@ interface OtlpValue {
 	arrayValue?: { values: OtlpValue[] };
 }
 
-interface OtlpEvent {
+export interface OtlpEvent {
 	name: string;
 	timeUnixNano: number;
 	attributes: OtlpAttribute[];
 }
 
-interface OtlpLink {
+export interface OtlpLink {
 	traceId: string;
 	spanId: string;
 	attributes: OtlpAttribute[];
 }
 
-type TransformValue = (value: Attribute) => OtlpValue | null;
+export type TransformValue = (value: Attribute) => OtlpValue | null;
 
 export class OtlpTransformer extends TraceTransformer {
 

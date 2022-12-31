@@ -1,6 +1,6 @@
-import { createTrace } from 'src/index';
 import { ZipkinTransformer } from 'src/transformers/zipkin';
 import { ATTRIBUTE_NAME, SPAN_NAME } from 'src/utils/constants';
+import { createTrace } from 'src/trace';
 
 interface Env {
 	KV: KVNamespace;

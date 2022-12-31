@@ -1,5 +1,5 @@
 // import { setupTracing } from 'workers-opentelemtry';
-import { createTrace } from 'src/index';
+import { createTrace } from 'src/trace';
 import { Span, Trace } from 'src/tracing';
 import { SPAN_NAME } from 'src/utils/constants';
 

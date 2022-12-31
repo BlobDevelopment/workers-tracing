@@ -1,4 +1,4 @@
-import { createTrace } from 'src/index';
+import { createTrace } from 'src/trace';
 import { ATTRIBUTE_NAME } from 'src/utils/constants';
 
 interface Env {}

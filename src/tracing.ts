@@ -2,7 +2,16 @@ import { OtlpTransformer } from './transformers/otlp';
 import { TraceTransformer } from './transformers/transformer';
 import { ATTRIBUTE_NAME } from './utils/constants';
 import { generateSpanId, generateTraceId } from './utils/rand';
-import { traceFn } from './index';
+import { traceFn } from './trace';
+import type {
+	Attributes,
+	SpanContext,
+	SpanCreationOptions,
+	SpanData,
+	SpanEvent,
+	TracedFn,
+	TracerOptions,
+} from './types';
 
 export enum StatusCode {
 	UNSET = 0,
