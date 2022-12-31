@@ -1,12 +1,20 @@
 # Workers Tracing
 
-This library will allow you to send [OpenTelemtry](https://opentelemetry.io/) traces inside of [Cloudflare Workers](https://workers.cloudflare.com/). OpenTelemtry is a standard tracing/metrics/logs format. With this you could send traces to your server and view them in something like [Jaeger](https://www.jaegertracing.io/).
+Workers tracing is a small (~2.6 KB compressed) and quick library for having distributed tracing within [Cloudflare Workers](https://workers.cloudflare.com/).
+
+There are currently 2 different formats supported:
+- [OpenTelemtry](https://opentelemetry.io/) is a standard tracing/metrics/logs format. It has wide support in many different services such as [Jaeger](https://www.jaegertracing.io/).
+- [Zipkin](https://zipkin.io/) is another widely adopted format which is focused on tracing.
+
+> **Note**
+> This is an opinionated library, it does not use the standard patterns and base libraries.
+> This was done very intentionally, we believe this libary is much cleaner (and just lighter) than the standard libraries.
 
 ## Install
 
 Installing this package is easy, you simply need to install the npm package like so:
 ```
-npm install --save workers-opentelemtry
+npm install --save workers-tracing
 ```
 
 ## Usage
@@ -14,7 +22,7 @@ npm install --save workers-opentelemtry
 ### JavaScript
 
 ```js
-import { setupTracing } from 'workers-opentelemtry';
+import { setupTracing } from 'workers-tracing';
 
 export default {
 	fetch(req, env, ctx) {
@@ -26,9 +34,6 @@ export default {
 				}
 			}
 		});
-
-		// This will allow tracing for bindings (future:tm:)
-		env = tracing.patchedEnv;
 
 		return this.handleRequest(req, tracing);
 	},
@@ -45,11 +50,13 @@ export default {
 
 ### Jaeger
 
-To send traces to Jaeger we want to enable their [OpenTelemetry compatible collector](https://www.jaegertracing.io/docs/1.40/deployment/#collector). This is until `workers-tracing` supports Jaeger out of the box.
+To send traces to the Jaeger [OpenTelemetry compatible collector](https://www.jaegertracing.io/docs/1.40/deployment/#collector) you will need to make sure Jaeger is configured to accept [OpenTelemtry](https://opentelemetry.io/) or [Zipkin](https://zipkin.io/).
 
-To start, you will want to run Jaeger with `COLLECTOR_OTLP_ENABLED` enabled and make sure port `4318` is mapped.
+For [OpenTelemtry](https://opentelemetry.io/) you will need to enable the compatibility support with `COLLECTOR_OTLP_ENABLED=true` (and make sure port `4318` is mapped).
 
-Here is an example command to run the `all-in-one` Docker image with the OpenTelemetry compatible collector.
+For [Zipkin](https://zipkin.io/) you will need to enable the JSON compatible layer by setting `COLLECTOR_ZIPKIN_HOST_PORT=:9411` (or a different port - make sure to map this).
+
+Here is an example command to run the `all-in-one` Docker image with the [OpenTelemtry](https://opentelemetry.io/) and [Zipkin](https://zipkin.io/) compatible collector enabled:
 ```sh
 $ docker run -d --name jaeger \
   -e COLLECTOR_ZIPKIN_HOST_PORT=:9411 \
@@ -67,8 +74,10 @@ $ docker run -d --name jaeger \
   jaegertracing/all-in-one:1.40
 ```
 
+(or through their binary: https://www.jaegertracing.io/download/ - `COLLECTOR_ZIPKIN_HOST_PORT=:9411 COLLECTOR_OTLP_ENABLED=true ./jaeger-all-in-one`)
+
 Once that is up, just set your collector URL in your Worker.
-Example:
+Here's an example of sending to the OTLP compatible endpoint:
 ```js
 const trace = createTrace(req, env, ctx, {
 	serviceName: 'basic-worker-tracing',
@@ -82,18 +91,22 @@ const trace = createTrace(req, env, ctx, {
 
 ### Cloudflare Workers
 
-| Thing         | Status       | Comment     |
-| ------------- | ------------ | ----------- |
-| `fetch` event | ✅ Supported | Added in v1 |
-| `fetch` API   | ✅ Supported | Added in v1 |
-| TODO          | Make         | This        |
+This library will work out of the box for Workers but see [limitations]() for the current limitations.
 
 ## Limitations
 
-## Goals
+### Cloudflare Workers
+
+There are a few limitations when using with Cloudflare Workers today, these include:
+- Env is not currently patchable, this means you'd need to do like `span.trace('kv:get', () => env.KV.get('abc'))` over just doing `env.KV.get('abc')`
+- Tracing cannot automatically resume tracing between services right now, see the [service binding example](https://github.com/BlobDevelopment/workers-tracing/tree/main/examples/service-binding) for how to do it today
 
 ## Future
 
-In the future, I'd like to have all tracing, storage and viewing on Cloudflare. For now, I'd recommend [Jaeger](https://www.jaegertracing.io/).
+There are a bunch of things planned for v1 including:
+- Patching env (optional thing) - this will allow you to do `env.KV.get()` like normal and have tracing automatically. No need to wrap it in a trace.
+- Span builder - Just a nice builder pattern for the trace (credit to [repeat.dev](https://repeat.dev/) for that idea).
 
-I'd also like to make sure that Deno is supported. If you'd like to test this and fix it (or just modify the README and add a test) then please do PR :)
+I'd also like to make sure that Deno is supported. If you'd like to test this and fix it (or just modify the README and add tests) then please do PR :)
+
+Outside of this lib, I want to have a related project of putting all tracing components (Sender, Collector and UI) all on Cloudflare (Workers, Workers/R2 and Pages). If this interests you, let me know!

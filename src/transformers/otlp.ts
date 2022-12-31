@@ -169,15 +169,12 @@ export class OtlpTransformer extends TraceTransformer {
 	collectSpans(span: Span): Span[] {
 		const spans = [];
 
-		console.log(`collectSpans(${span.getSpanId()})`);
 		spans.push(span);
 
 		// Go through children and collect them all
 		for (const childSpan of span.getChildSpans()) {
 			spans.push(...this.collectSpans(childSpan));
 		}
-
-		console.log('  added ' + span.getChildSpans().length + ' spans');
 
 		return spans;
 	}

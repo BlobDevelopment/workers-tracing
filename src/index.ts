@@ -9,6 +9,7 @@ export function createTrace(
 ): Trace {
 	// This is ugly
 	// TODO: Fix this
+	// This parent context will allow properly tracing across services (and other Workers)
 	let parentContext: SpanContext | undefined;
 	if ((req.cf as CfWithTrace)?.traceContext) {
 		parentContext = (req.cf as CfWithTrace)?.traceContext;
@@ -20,11 +21,6 @@ export function createTrace(
 		}
 	}
 
-	// This parent context will allow properly tracing across services (and other Workers)
-	console.log(`creating trace in ${tracerOptions.serviceName} `
-		+ `(parent trace: ${parentContext?.traceId}, `
-		+ `parent span: ${parentContext?.spanId})`,
-	);
 	// TODO: Transformer type fix needed
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore

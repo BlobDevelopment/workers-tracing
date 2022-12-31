@@ -31,7 +31,7 @@
 		"build:esm": "esbuild --format=esm --platform=neutral --bundle --minify --sourcemap --outfile=dist/workers-tracing.esm src/index.ts",
 		"build:cjs": "esbuild --format=cjs --platform=neutral --bundle --minify --sourcemap --outfile=dist/workers-tracing.cjs src/index.ts",
 		"build:types": "tsc --emitDeclarationOnly --outDir dist",
-		"record-sizes": "npm run build && gzip dist/workers-tracing.esm dist/workers-tracing.cjs && npm run build",
+		"record-sizes": "rm -rf dist && npm run build && gzip dist/workers-tracing.esm dist/workers-tracing.cjs && npm run build && ls -lah dist",
 		"test": "vitest",
 		"lint": "eslint --ext js,ts src test",
 		"lint:fix": "eslint --fix --ext js,ts src test"

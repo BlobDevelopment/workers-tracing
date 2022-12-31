@@ -65,8 +65,6 @@ export class Span {
 		const span = new Span(this.#span.traceId, name, spanOptions);
 		span.#span.parentId = this.getSpanId();
 
-		console.log('Made new span -', span.getSpanId(), 'with parent ID:', this.getSpanId());
-
 		// TODO: Figure out how to get this attached to Trace
 		// Do I like this?
 		this.#childSpans.push(span);
@@ -122,8 +120,6 @@ export class Trace extends Span {
 				...this.#tracerOptions.resource.attributes,
 			};
 		}
-
-		console.log('made new trace, root span:', this.getData());
 	}
 
 	/**
@@ -158,21 +154,22 @@ export class Trace extends Span {
 		}
 
 		const bodyStr = JSON.stringify(body);
-		console.log('sending:');
-		console.log(bodyStr);
 
+		/* -- DEBUG
 		const res = await fetch(this.#tracerOptions.collector.url, {
 			method: 'POST',
 			headers,
 			body: bodyStr,
 		});
-		console.log('trace sent -', res.status);
 
 		const txt = await res.text();
 		console.log(txt);
+		*/
 
-		// this.#ctx.waitUntil(fetch(this.#tracerOptions.collector.url, {
-		// 	headers,
-		// }));
+		this.#ctx.waitUntil(fetch(this.#tracerOptions.collector.url, {
+			method: 'POST',
+			headers,
+			body: bodyStr,
+		}));
 	}
 }
