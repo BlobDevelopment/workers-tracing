@@ -124,7 +124,7 @@ interface TracerOptions {
 	collector: CollectorOptions;
 	resource?: ResourceOptions;
 	traceContext?: SpanContext;
-	transformer?: any; // TODO: Move to CollectorOptions
+	transformer?: unknown; // TODO: Move to CollectorOptions
 }
 
 interface CollectorOptions {
@@ -140,4 +140,4 @@ type CfWithTrace = IncomingRequestCfProperties & {
 	traceContext?: SpanContext;
 }
 
-type TracedFn<T> = (...args: any[]) => T;
+type TracedFn<T> = (...args: unknown[]) => T;

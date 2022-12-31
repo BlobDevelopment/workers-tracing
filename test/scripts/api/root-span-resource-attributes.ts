@@ -13,7 +13,7 @@ export default {
 			resource: {
 				attributes: {
 					example: true,
-					[ATTRIBUTE_NAME.RUNTIME_NAME]: 'blob-runtime'
+					[ATTRIBUTE_NAME.RUNTIME_NAME]: 'blob-runtime',
 				},
 			},
 		});
@@ -21,4 +21,4 @@ export default {
 		await trace.send();
 		return new Response('ok', { headers: { 'x-trace-id': trace.getTraceId() } });
 	},
-}
+};

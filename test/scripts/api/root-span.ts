@@ -8,10 +8,10 @@ export default {
 			serviceName: 'root-span',
 			collector: {
 				url: 'http://0.0.0.0:4318/v1/traces',
-			}
+			},
 		});
 
 		await trace.send();
 		return new Response('ok', { headers: { 'x-trace-id': trace.getTraceId() } });
 	},
-}
+};

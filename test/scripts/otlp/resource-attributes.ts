@@ -16,11 +16,11 @@ export default {
 				attributes: {
 					exampleAttribute: true,
 					[ATTRIBUTE_NAME.RUNTIME_NAME]: 'blob-runtime',
-				}
-			}
+				},
+			},
 		});
 
 		await trace.send();
 		return new Response('ok', { headers: { 'x-trace-id': trace.getTraceId() } });
 	},
-}
+};

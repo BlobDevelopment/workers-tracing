@@ -20,7 +20,7 @@ export default {
 			attributes: { [ATTRIBUTE_NAME.HTTP_HOST]: 'example.com' },
 		});
 
-		const res = await fetch('https://example.com');
+		await fetch('https://example.com');
 
 		const kvSpan = fetchSpan.startSpan(SPAN_NAME.KV_GET, {
 			attributes: { [ATTRIBUTE_NAME.KV_KEY]: 'abc' },
@@ -33,4 +33,4 @@ export default {
 		await trace.send();
 		return new Response('ok', { headers: { 'x-trace-id': trace.getTraceId() } });
 	},
-}
+};

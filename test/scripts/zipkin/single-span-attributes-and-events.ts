@@ -15,17 +15,17 @@ export default {
 		});
 
 		const span = trace.startSpan(SPAN_NAME.FETCH, {
-			attributes: { [ATTRIBUTE_NAME.HTTP_HOST]: 'example.com' }
+			attributes: { [ATTRIBUTE_NAME.HTTP_HOST]: 'example.com' },
 		});
 
 		const res = await fetch('https://example.com');
 		span.addEvent({ name: 'Fetch done', timestamp: Date.now() });
 
-		const text = await res.text();
+		await res.text();
 		span.addEvent({ name: 'Response body parsed', timestamp: Date.now() });
 
 		span.end();
 		await trace.send();
 		return new Response('ok', { headers: { 'x-trace-id': trace.getTraceId() } });
 	},
-}
+};

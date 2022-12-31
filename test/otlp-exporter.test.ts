@@ -1,6 +1,6 @@
 import { OtlpJson } from 'src/transformers/otlp';
 import { ATTRIBUTE_NAME, SPAN_NAME } from 'src/utils/constants';
-import { afterAll, afterEach, beforeAll, describe, expect, it, test } from 'vitest';
+import { afterAll, afterEach, beforeAll, describe, expect, test } from 'vitest';
 import { UnstableDevWorker } from 'wrangler';
 import { getTrace } from './utils/trace';
 import { startCollector, startWorker } from './utils/worker';
@@ -36,7 +36,11 @@ describe('Test OTLP Exporter', () => {
 		expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 		const traceId = res.headers.get('x-trace-id');
-		const trace = await getTrace<OtlpJson>(collectorWorker, traceId!);
+		if (traceId === null) {
+			expect(traceId).not.toBeNull();
+			return;
+		}
+		const trace = await getTrace<OtlpJson>(collectorWorker, traceId);
 
 		expect(trace.resourceSpans.length).toBe(1);
 		const resourceSpan = trace.resourceSpans[0];
@@ -60,7 +64,11 @@ describe('Test OTLP Exporter', () => {
 			expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 			const traceId = res.headers.get('x-trace-id');
-			const trace = await getTrace<OtlpJson>(collectorWorker, traceId!);
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace<OtlpJson>(collectorWorker, traceId);
 
 			expect(trace.resourceSpans.length).toBe(1);
 			const resourceSpan = trace.resourceSpans[0];
@@ -93,7 +101,11 @@ describe('Test OTLP Exporter', () => {
 			expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 			const traceId = res.headers.get('x-trace-id');
-			const trace = await getTrace<OtlpJson>(collectorWorker, traceId!);
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace<OtlpJson>(collectorWorker, traceId);
 
 			expect(trace.resourceSpans.length).toBe(1);
 			const resourceSpan = trace.resourceSpans[0];
@@ -116,7 +128,7 @@ describe('Test OTLP Exporter', () => {
 
 			// Custom attributes
 			expect(resource.attributes.find((attribute) => attribute.key === 'exampleAttribute'))
-				.toStrictEqual({ key: 'exampleAttribute', value: { boolValue: true } });;
+				.toStrictEqual({ key: 'exampleAttribute', value: { boolValue: true } });
 			expect(resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.RUNTIME_NAME))
 				.toStrictEqual({ key: ATTRIBUTE_NAME.RUNTIME_NAME, value: { stringValue: 'blob-runtime' } });
 		});
@@ -132,7 +144,11 @@ describe('Test OTLP Exporter', () => {
 			expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 			const traceId = res.headers.get('x-trace-id');
-			const trace = await getTrace<OtlpJson>(collectorWorker, traceId!);
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace<OtlpJson>(collectorWorker, traceId);
 
 			// Root + child
 			expect(trace.resourceSpans.length).toBe(1);
@@ -167,7 +183,11 @@ describe('Test OTLP Exporter', () => {
 			expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 			const traceId = res.headers.get('x-trace-id');
-			const trace = await getTrace<OtlpJson>(collectorWorker, traceId!);
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace<OtlpJson>(collectorWorker, traceId);
 
 			// Root + child
 			expect(trace.resourceSpans.length).toBe(1);
@@ -204,7 +224,11 @@ describe('Test OTLP Exporter', () => {
 			expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 			const traceId = res.headers.get('x-trace-id');
-			const trace = await getTrace<OtlpJson>(collectorWorker, traceId!);
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace<OtlpJson>(collectorWorker, traceId);
 
 			// Root + child
 			expect(trace.resourceSpans.length).toBe(1);
@@ -253,7 +277,11 @@ describe('Test OTLP Exporter', () => {
 			expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 			const traceId = res.headers.get('x-trace-id');
-			const trace = await getTrace<OtlpJson>(collectorWorker, traceId!);
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace<OtlpJson>(collectorWorker, traceId);
 
 			// Root + child
 			expect(trace.resourceSpans.length).toBe(1);
@@ -307,7 +335,11 @@ describe('Test OTLP Exporter', () => {
 			expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 			const traceId = res.headers.get('x-trace-id');
-			const trace = await getTrace<OtlpJson>(collectorWorker, traceId!);
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace<OtlpJson>(collectorWorker, traceId);
 
 			// Root + 2 children
 			expect(trace.resourceSpans.length).toBe(1);
@@ -351,7 +383,11 @@ describe('Test OTLP Exporter', () => {
 			expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 			const traceId = res.headers.get('x-trace-id');
-			const trace = await getTrace<OtlpJson>(collectorWorker, traceId!);
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace<OtlpJson>(collectorWorker, traceId);
 
 			// Root + 2 children
 			expect(trace.resourceSpans.length).toBe(1);
@@ -399,7 +435,11 @@ describe('Test OTLP Exporter', () => {
 			expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 			const traceId = res.headers.get('x-trace-id');
-			const trace = await getTrace<OtlpJson>(collectorWorker, traceId!);
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace<OtlpJson>(collectorWorker, traceId);
 
 			// Root + 2 children
 			expect(trace.resourceSpans.length).toBe(1);
@@ -465,7 +505,11 @@ describe('Test OTLP Exporter', () => {
 			expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 			const traceId = res.headers.get('x-trace-id');
-			const trace = await getTrace<OtlpJson>(collectorWorker, traceId!);
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace<OtlpJson>(collectorWorker, traceId);
 
 			// Root + 2 children
 			expect(trace.resourceSpans.length).toBe(1);
@@ -537,7 +581,11 @@ describe('Test OTLP Exporter', () => {
 			expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 			const traceId = res.headers.get('x-trace-id');
-			const trace = await getTrace<OtlpJson>(collectorWorker, traceId!);
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace<OtlpJson>(collectorWorker, traceId);
 
 			// Root + 2 children
 			expect(trace.resourceSpans.length).toBe(1);
@@ -582,7 +630,11 @@ describe('Test OTLP Exporter', () => {
 			expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 			const traceId = res.headers.get('x-trace-id');
-			const trace = await getTrace<OtlpJson>(collectorWorker, traceId!);
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace<OtlpJson>(collectorWorker, traceId);
 
 			// Root + 2 children
 			expect(trace.resourceSpans.length).toBe(1);
@@ -631,7 +683,11 @@ describe('Test OTLP Exporter', () => {
 			expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 			const traceId = res.headers.get('x-trace-id');
-			const trace = await getTrace<OtlpJson>(collectorWorker, traceId!);
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace<OtlpJson>(collectorWorker, traceId);
 
 			// Root + 2 children
 			expect(trace.resourceSpans.length).toBe(1);
@@ -698,7 +754,11 @@ describe('Test OTLP Exporter', () => {
 			expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 			const traceId = res.headers.get('x-trace-id');
-			const trace = await getTrace<OtlpJson>(collectorWorker, traceId!);
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace<OtlpJson>(collectorWorker, traceId);
 
 			// Root + 2 children
 			expect(trace.resourceSpans.length).toBe(1);

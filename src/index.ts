@@ -23,11 +23,14 @@ export function createTrace(
 	// This parent context will allow properly tracing across services (and other Workers)
 	console.log(`creating trace in ${tracerOptions.serviceName} `
 		+ `(parent trace: ${parentContext?.traceId}, `
-		+ `parent span: ${parentContext?.spanId})`
+		+ `parent span: ${parentContext?.spanId})`,
 	);
+	// TODO: Transformer type fix needed
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
 	const trace = new Trace(ctx, {
 		traceContext: parentContext,
-		...tracerOptions
+		...tracerOptions,
 	}, spanOptions);
 
 	return trace;
@@ -36,8 +39,8 @@ export function createTrace(
 export function traceFn<T>(
 	parent: Span,
 	name: string,
-	fn: (...args: any[]) => T,
-	opts?: SpanCreationOptions
+	fn: TracedFn<T>,
+	opts?: SpanCreationOptions,
 ): T {
 	const span = parent.startSpan(name, opts);
 

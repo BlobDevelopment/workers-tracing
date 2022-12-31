@@ -35,7 +35,7 @@ interface DevOptions {
 		database_internal_env?: string;
 	}[];
 	showInteractiveDevSession?: boolean;
-	logLevel?: "none" | "info" | "error" | "log" | "warn" | "debug";
+	logLevel?: 'none' | 'info' | 'error' | 'log' | 'warn' | 'debug';
 	logPrefix?: string;
 }
 
@@ -62,7 +62,7 @@ export async function startWorker(scriptPath: string, opts?: DevOptions): Promis
 
 export async function startCollector(opts: DevOptions & { port: number }): Promise<UnstableDevWorker> {
 	if (LOG_LEVEL === 'debug') {
-		console.log(`Starting collector`);
+		console.log('Starting collector');
 	}
 	const worker = await unstable_dev('test/scripts/collector.ts', {
 		bundle: true,

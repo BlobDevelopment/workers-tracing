@@ -2,6 +2,7 @@ import { Span, Trace } from 'src/tracing';
 
 export class TraceTransformer {
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	transform(trace: Trace): object {
 		throw new Error('Transformer has not implemented `transform()` function');
 	}

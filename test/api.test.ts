@@ -37,7 +37,11 @@ describe('API', () => {
 				expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 				const traceId = res.headers.get('x-trace-id');
-				const trace = await getTrace(collectorWorker, traceId!);
+				if (traceId === null) {
+					expect(traceId).not.toBeNull();
+					return;
+				}
+				const trace = await getTrace(collectorWorker, traceId);
 
 				expect(trace.resourceSpans.length).toBe(1);
 				const resourceSpan = trace.resourceSpans[0];
@@ -61,7 +65,11 @@ describe('API', () => {
 				expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 				const traceId = res.headers.get('x-trace-id');
-				const trace = await getTrace(collectorWorker, traceId!);
+				if (traceId === null) {
+					expect(traceId).not.toBeNull();
+					return;
+				}
+				const trace = await getTrace(collectorWorker, traceId);
 
 				expect(trace.resourceSpans.length).toBe(1);
 				const resourceSpan = trace.resourceSpans[0];
@@ -87,7 +95,11 @@ describe('API', () => {
 				expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 				const traceId = res.headers.get('x-trace-id');
-				const trace = await getTrace(collectorWorker, traceId!);
+				if (traceId === null) {
+					expect(traceId).not.toBeNull();
+					return;
+				}
+				const trace = await getTrace(collectorWorker, traceId);
 
 				expect(trace.resourceSpans.length).toBe(1);
 				const resourceSpan = trace.resourceSpans[0];
@@ -95,19 +107,19 @@ describe('API', () => {
 
 				// Validate default resource attributes
 				expect(
-					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SERVICE_NAME)
+					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SERVICE_NAME),
 				).toStrictEqual({ key: ATTRIBUTE_NAME.SERVICE_NAME, value: { stringValue: 'root-span' } });
 				expect(
-					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SDK_NAME)
+					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SDK_NAME),
 				).toStrictEqual({ key: ATTRIBUTE_NAME.SDK_NAME, value: { stringValue: 'workers-tracing' } });
 				expect(
-					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SDK_LANG)
+					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SDK_LANG),
 				).toStrictEqual({ key: ATTRIBUTE_NAME.SDK_LANG, value: { stringValue: 'javascript' } });
 				expect(
-					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SDK_VERSION)
+					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SDK_VERSION),
 				).toStrictEqual({ key: ATTRIBUTE_NAME.SDK_VERSION, value: { stringValue: '$VERSION$' } });
 				expect(
-					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.RUNTIME_NAME)
+					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.RUNTIME_NAME),
 				).toStrictEqual({ key: ATTRIBUTE_NAME.RUNTIME_NAME, value: { stringValue: 'Cloudflare-Workers' } });
 
 				// Check spans
@@ -130,7 +142,11 @@ describe('API', () => {
 				expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 				const traceId = res.headers.get('x-trace-id');
-				const trace = await getTrace(collectorWorker, traceId!);
+				if (traceId === null) {
+					expect(traceId).not.toBeNull();
+					return;
+				}
+				const trace = await getTrace(collectorWorker, traceId);
 
 				expect(trace.resourceSpans.length).toBe(1);
 				const resourceSpan = trace.resourceSpans[0];
@@ -138,24 +154,24 @@ describe('API', () => {
 
 				// Validate default resource attributes
 				expect(
-					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SERVICE_NAME)
+					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SERVICE_NAME),
 				).toStrictEqual({ key: ATTRIBUTE_NAME.SERVICE_NAME, value: { stringValue: 'root-span-resource-attributes' } });
 				expect(
-					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SDK_NAME)
+					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SDK_NAME),
 				).toStrictEqual({ key: ATTRIBUTE_NAME.SDK_NAME, value: { stringValue: 'workers-tracing' } });
 				expect(
-					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SDK_LANG)
+					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SDK_LANG),
 				).toStrictEqual({ key: ATTRIBUTE_NAME.SDK_LANG, value: { stringValue: 'javascript' } });
 				expect(
-					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SDK_VERSION)
+					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SDK_VERSION),
 				).toStrictEqual({ key: ATTRIBUTE_NAME.SDK_VERSION, value: { stringValue: '$VERSION$' } });
 
 				// Validate custom resource attributes
 				expect(
-					resource.attributes.find((attribute) => attribute.key === 'example')
+					resource.attributes.find((attribute) => attribute.key === 'example'),
 				).toStrictEqual({ key: 'example', value: { boolValue: true } });
 				expect(
-					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.RUNTIME_NAME)
+					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.RUNTIME_NAME),
 				).toStrictEqual({ key: ATTRIBUTE_NAME.RUNTIME_NAME, value: { stringValue: 'blob-runtime' } });
 
 				// Check spans
@@ -178,7 +194,11 @@ describe('API', () => {
 				expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 				const traceId = res.headers.get('x-trace-id');
-				const trace = await getTrace(collectorWorker, traceId!);
+				if (traceId === null) {
+					expect(traceId).not.toBeNull();
+					return;
+				}
+				const trace = await getTrace(collectorWorker, traceId);
 
 				expect(trace.resourceSpans.length).toBe(1);
 				const resourceSpan = trace.resourceSpans[0];
@@ -186,19 +206,19 @@ describe('API', () => {
 
 				// Validate default resource attributes
 				expect(
-					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SERVICE_NAME)
+					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SERVICE_NAME),
 				).toStrictEqual({ key: ATTRIBUTE_NAME.SERVICE_NAME, value: { stringValue: 'root-span-attributes' } });
 				expect(
-					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SDK_NAME)
+					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SDK_NAME),
 				).toStrictEqual({ key: ATTRIBUTE_NAME.SDK_NAME, value: { stringValue: 'workers-tracing' } });
 				expect(
-					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SDK_LANG)
+					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SDK_LANG),
 				).toStrictEqual({ key: ATTRIBUTE_NAME.SDK_LANG, value: { stringValue: 'javascript' } });
 				expect(
-					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SDK_VERSION)
+					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SDK_VERSION),
 				).toStrictEqual({ key: ATTRIBUTE_NAME.SDK_VERSION, value: { stringValue: '$VERSION$' } });
 				expect(
-					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.RUNTIME_NAME)
+					resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.RUNTIME_NAME),
 				).toStrictEqual({ key: ATTRIBUTE_NAME.RUNTIME_NAME, value: { stringValue: 'Cloudflare-Workers' } });
 
 				// Check spans
@@ -213,10 +233,10 @@ describe('API', () => {
 
 				// Validate custom attributes
 				expect(
-					span.attributes.find((attribute) => attribute.key === 'customAttribute')
+					span.attributes.find((attribute) => attribute.key === 'customAttribute'),
 				).toStrictEqual({ key: 'customAttribute', value: { intValue: 1337 } });
 				expect(
-					span.attributes.find((attribute) => attribute.key === 'workersTracing')
+					span.attributes.find((attribute) => attribute.key === 'workersTracing'),
 				).toStrictEqual({ key: 'workersTracing', value: { boolValue: true } });
 			});
 
@@ -229,7 +249,11 @@ describe('API', () => {
 				expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 				const traceId = res.headers.get('x-trace-id');
-				const trace = await getTrace(collectorWorker, traceId!);
+				if (traceId === null) {
+					expect(traceId).not.toBeNull();
+					return;
+				}
+				const trace = await getTrace(collectorWorker, traceId);
 
 				expect(trace.resourceSpans.length).toBe(1);
 				const resourceSpan = trace.resourceSpans[0];
@@ -257,7 +281,11 @@ describe('API', () => {
 				expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 				const traceId = res.headers.get('x-trace-id');
-				const trace = await getTrace(collectorWorker, traceId!);
+				if (traceId === null) {
+					expect(traceId).not.toBeNull();
+					return;
+				}
+				const trace = await getTrace(collectorWorker, traceId);
 
 				expect(trace.resourceSpans.length).toBe(1);
 				const resourceSpan = trace.resourceSpans[0];
@@ -287,7 +315,11 @@ describe('API', () => {
 				expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 				const traceId = res.headers.get('x-trace-id');
-				const trace = await getTrace(collectorWorker, traceId!);
+				if (traceId === null) {
+					expect(traceId).not.toBeNull();
+					return;
+				}
+				const trace = await getTrace(collectorWorker, traceId);
 
 				expect(trace.resourceSpans.length).toBe(1);
 				const resourceSpan = trace.resourceSpans[0];
@@ -317,7 +349,7 @@ describe('API', () => {
 							key: 'link',
 							value: {
 								intValue: 2,
-							}
+							},
 						},
 						{
 							key: 'muchWow',

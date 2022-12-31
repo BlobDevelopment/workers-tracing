@@ -79,7 +79,7 @@ export class OtlpTransformer extends TraceTransformer {
 						attributes: this.transformAttributes(
 							{
 								...trace.getTracerOptions().resource?.attributes,
-							}
+							},
 						),
 					},
 
@@ -89,7 +89,7 @@ export class OtlpTransformer extends TraceTransformer {
 								name: trace.getTracerOptions().serviceName,
 							},
 							spans: this.collectSpans(trace).map((span) => this.transformSpan(span)),
-						}
+						},
 					],
 				},
 			],
@@ -123,7 +123,7 @@ export class OtlpTransformer extends TraceTransformer {
 					return null;
 				}
 			}
-		}
+		};
 
 		for (const [key, value] of Object.entries(attributes)) {
 			const transformedValue = transformValue(value);
@@ -132,7 +132,7 @@ export class OtlpTransformer extends TraceTransformer {
 			transformed.push({
 				key: key,
 				value: transformedValue,
-			})
+			});
 		}
 
 		return transformed;

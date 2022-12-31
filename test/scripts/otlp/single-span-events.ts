@@ -25,7 +25,7 @@ export default {
 			},
 		});
 
-		const text = await res.text();
+		await res.text();
 		span.addEvent({
 			name: 'Response body parsed',
 			timestamp: Date.now(),
@@ -38,4 +38,4 @@ export default {
 		await trace.send();
 		return new Response('ok', { headers: { 'x-trace-id': trace.getTraceId() } });
 	},
-}
+};

@@ -22,10 +22,10 @@ export default {
 						muchWow: true,
 					},
 				},
-			]
+			],
 		});
 
 		await trace.send();
 		return new Response('ok', { headers: { 'x-trace-id': trace.getTraceId() } });
 	},
-}
+};

@@ -32,10 +32,16 @@
 		"build:cjs": "esbuild --format=cjs --platform=neutral --bundle --minify --sourcemap --outfile=dist/workers-tracing.cjs src/index.ts",
 		"build:types": "tsc --emitDeclarationOnly --outDir dist",
 		"record-sizes": "npm run build && gzip dist/workers-tracing.esm dist/workers-tracing.cjs && npm run build",
-		"test": "vitest"
+		"test": "vitest",
+		"lint": "eslint --ext js,ts src test",
+		"lint:fix": "eslint --fix --ext js,ts src test"
 	},
 	"devDependencies": {
 		"@cloudflare/workers-types": "^3.18.0",
+		"@typescript-eslint/eslint-plugin": "^5.47.1",
+		"@typescript-eslint/parser": "^5.47.1",
+		"eslint": "^8.30.0",
+		"eslint-plugin-import": "^2.26.0",
 		"vitest": "^0.26.2",
 		"wrangler": "^2.6.2"
 	}

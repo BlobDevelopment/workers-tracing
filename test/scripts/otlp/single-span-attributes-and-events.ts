@@ -15,7 +15,7 @@ export default {
 		});
 
 		const span = trace.startSpan(SPAN_NAME.FETCH, {
-			attributes: { [ATTRIBUTE_NAME.HTTP_HOST]: 'example.com' }
+			attributes: { [ATTRIBUTE_NAME.HTTP_HOST]: 'example.com' },
 		});
 
 		const res = await fetch('https://example.com');
@@ -27,7 +27,7 @@ export default {
 			},
 		});
 
-		const text = await res.text();
+		await res.text();
 		span.addEvent({
 			name: 'Response body parsed',
 			timestamp: Date.now(),
@@ -40,4 +40,4 @@ export default {
 		await trace.send();
 		return new Response('ok', { headers: { 'x-trace-id': trace.getTraceId() } });
 	},
-}
+};

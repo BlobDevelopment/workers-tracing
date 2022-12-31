@@ -1,8 +1,8 @@
-import { traceFn } from './index';
 import { OtlpTransformer } from './transformers/otlp';
 import { TraceTransformer } from './transformers/transformer';
 import { ATTRIBUTE_NAME } from './utils/constants';
 import { generateSpanId, generateTraceId } from './utils/rand';
+import { traceFn } from './index';
 
 export enum StatusCode {
 	UNSET = 0,
@@ -17,7 +17,7 @@ export function getDefaultAttributes(opts: TracerOptions): Attributes {
 		[ATTRIBUTE_NAME.SDK_LANG]: 'javascript',
 		[ATTRIBUTE_NAME.SDK_VERSION]: '$VERSION$', // TODO: define in esbuild
 		[ATTRIBUTE_NAME.RUNTIME_NAME]: navigator.userAgent, // Cloudflare-Workers
-	}
+	};
 }
 
 export class Span {
@@ -99,7 +99,7 @@ export class Trace extends Span {
 	constructor(
 		ctx: ExecutionContext,
 		tracerOptions: TracerOptions & { transformer?: TraceTransformer },
-		spanOptions?: SpanCreationOptions
+		spanOptions?: SpanCreationOptions,
 	) {
 		super(
 			tracerOptions.traceContext?.traceId ?? generateTraceId(),
@@ -107,7 +107,7 @@ export class Trace extends Span {
 			{
 				parentId: tracerOptions.traceContext?.spanId,
 				...spanOptions,
-			}
+			},
 		);
 		this.#ctx = ctx;
 		this.#tracerOptions = tracerOptions;
@@ -141,9 +141,12 @@ export class Trace extends Span {
 		// We need to end the trace here
 		this.end();
 
+		// TODO: Properly fix this
 		const headers = this.#tracerOptions.collector.headers || {};
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		headers['Content-Type'] = 'application/json';
+		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore		
 		headers['x-trace-id'] = this.getTraceId();
 

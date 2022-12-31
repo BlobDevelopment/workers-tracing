@@ -15,10 +15,10 @@ export default {
 		});
 
 		await trace.trace(SPAN_NAME.FETCH, () => fetch('https://example.com'), {
-			attributes: { [ATTRIBUTE_NAME.HTTP_HOST]: 'example.com' }
+			attributes: { [ATTRIBUTE_NAME.HTTP_HOST]: 'example.com' },
 		});
 
 		await trace.send();
 		return new Response('ok', { headers: { 'x-trace-id': trace.getTraceId() } });
 	},
-}
+};

@@ -35,5 +35,5 @@ export default {
 		}
 
 		return Response.json({ error: 'Not found' }, { status: 404 });
-	}
-}
+	},
+};

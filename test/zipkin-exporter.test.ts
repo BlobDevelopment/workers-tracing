@@ -1,6 +1,6 @@
 import { ZipkinJson } from 'src/transformers/zipkin';
 import { ATTRIBUTE_NAME, SPAN_NAME } from 'src/utils/constants';
-import { afterAll, afterEach, beforeAll, describe, expect, it, test } from 'vitest';
+import { afterAll, afterEach, beforeAll, describe, expect, test } from 'vitest';
 import { UnstableDevWorker } from 'wrangler';
 import { getTrace } from './utils/trace';
 import { startCollector, startWorker } from './utils/worker';
@@ -36,7 +36,11 @@ describe('Test Zipkin Exporter', () => {
 		expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 		const traceId = res.headers.get('x-trace-id');
-		const trace = await getTrace<ZipkinJson>(collectorWorker, traceId!);
+		if (traceId === null) {
+			expect(traceId).not.toBeNull();
+			return;
+		}
+		const trace = await getTrace<ZipkinJson>(collectorWorker, traceId);
 
 		const span = trace[0];
 		expect(span.traceId).toBe(traceId);
@@ -54,7 +58,11 @@ describe('Test Zipkin Exporter', () => {
 			expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 			const traceId = res.headers.get('x-trace-id');
-			const trace = await getTrace<ZipkinJson>(collectorWorker, traceId!);
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace<ZipkinJson>(collectorWorker, traceId);
 
 			const span = trace[0];
 			expect(span.traceId).toBe(traceId);
@@ -62,11 +70,11 @@ describe('Test Zipkin Exporter', () => {
 			expect(span.localEndpoint.serviceName).toBe('zipkin-basic');
 
 			// Check attributes
-			expect(span.tags![ATTRIBUTE_NAME.SERVICE_NAME]).toBe('zipkin-basic');
-			expect(span.tags![ATTRIBUTE_NAME.SDK_NAME]).toBe('workers-tracing');
-			expect(span.tags![ATTRIBUTE_NAME.SDK_LANG]).toBe('javascript');
-			expect(span.tags![ATTRIBUTE_NAME.SDK_VERSION]).toBe('$VERSION$');
-			expect(span.tags![ATTRIBUTE_NAME.RUNTIME_NAME]).toBe('Cloudflare-Workers');
+			expect(span.tags?.[ATTRIBUTE_NAME.SERVICE_NAME]).toBe('zipkin-basic');
+			expect(span.tags?.[ATTRIBUTE_NAME.SDK_NAME]).toBe('workers-tracing');
+			expect(span.tags?.[ATTRIBUTE_NAME.SDK_LANG]).toBe('javascript');
+			expect(span.tags?.[ATTRIBUTE_NAME.SDK_VERSION]).toBe('$VERSION$');
+			expect(span.tags?.[ATTRIBUTE_NAME.RUNTIME_NAME]).toBe('Cloudflare-Workers');
 		});
 
 		test('You can add attributes on resource', async () => {
@@ -78,7 +86,11 @@ describe('Test Zipkin Exporter', () => {
 			expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 			const traceId = res.headers.get('x-trace-id');
-			const trace = await getTrace<ZipkinJson>(collectorWorker, traceId!);
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace<ZipkinJson>(collectorWorker, traceId);
 
 			const span = trace[0];
 			expect(span.traceId).toBe(traceId);
@@ -86,14 +98,14 @@ describe('Test Zipkin Exporter', () => {
 			expect(span.localEndpoint.serviceName).toBe('resource-attributes');
 
 			// Check attributes
-			expect(span.tags![ATTRIBUTE_NAME.SERVICE_NAME]).toBe('resource-attributes');
-			expect(span.tags![ATTRIBUTE_NAME.SDK_NAME]).toBe('workers-tracing');
-			expect(span.tags![ATTRIBUTE_NAME.SDK_LANG]).toBe('javascript');
-			expect(span.tags![ATTRIBUTE_NAME.SDK_VERSION]).toBe('$VERSION$');
+			expect(span.tags?.[ATTRIBUTE_NAME.SERVICE_NAME]).toBe('resource-attributes');
+			expect(span.tags?.[ATTRIBUTE_NAME.SDK_NAME]).toBe('workers-tracing');
+			expect(span.tags?.[ATTRIBUTE_NAME.SDK_LANG]).toBe('javascript');
+			expect(span.tags?.[ATTRIBUTE_NAME.SDK_VERSION]).toBe('$VERSION$');
 			
 			// Custom attributes
-			expect(span.tags!['exampleAttribute']).toBe('true');
-			expect(span.tags![ATTRIBUTE_NAME.RUNTIME_NAME]).toBe('blob-runtime');
+			expect(span.tags?.['exampleAttribute']).toBe('true');
+			expect(span.tags?.[ATTRIBUTE_NAME.RUNTIME_NAME]).toBe('blob-runtime');
 		});
 	});
 
@@ -107,7 +119,11 @@ describe('Test Zipkin Exporter', () => {
 			expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 			const traceId = res.headers.get('x-trace-id');
-			const trace = await getTrace<ZipkinJson>(collectorWorker, traceId!);
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace<ZipkinJson>(collectorWorker, traceId);
 
 			// Root + child
 			expect(trace.length).toBe(2);
@@ -135,7 +151,11 @@ describe('Test Zipkin Exporter', () => {
 			expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 			const traceId = res.headers.get('x-trace-id');
-			const trace = await getTrace<ZipkinJson>(collectorWorker, traceId!);
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace<ZipkinJson>(collectorWorker, traceId);
 
 			// Root + child
 			expect(trace.length).toBe(2);
@@ -152,7 +172,7 @@ describe('Test Zipkin Exporter', () => {
 			expect(childSpan.parentId).toBe(rootSpan.id);
 			expect(childSpan.name).toBe(SPAN_NAME.FETCH);
 			expect(childSpan.duration).not.toBe(0);
-			expect(childSpan.tags![ATTRIBUTE_NAME.HTTP_HOST]).toBe('example.com');
+			expect(childSpan.tags?.[ATTRIBUTE_NAME.HTTP_HOST]).toBe('example.com');
 		});
 
 		test('You can add a single span with events', async () => {
@@ -164,7 +184,11 @@ describe('Test Zipkin Exporter', () => {
 			expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 			const traceId = res.headers.get('x-trace-id');
-			const trace = await getTrace<ZipkinJson>(collectorWorker, traceId!);
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace<ZipkinJson>(collectorWorker, traceId);
 
 			// Root + child
 			expect(trace.length).toBe(2);
@@ -184,10 +208,10 @@ describe('Test Zipkin Exporter', () => {
 
 			// Annotations (events)
 			expect(childSpan.annotations?.length).toBe(2);
-			expect(childSpan.annotations![0].value).toBe('Fetch done');
-			expect(childSpan.annotations![0].timestamp).not.toBe(0);
-			expect(childSpan.annotations![1].value).toBe('Response body parsed');
-			expect(childSpan.annotations![1].timestamp).not.toBe(0);
+			expect(childSpan.annotations?.[0].value).toBe('Fetch done');
+			expect(childSpan.annotations?.[0].timestamp).not.toBe(0);
+			expect(childSpan.annotations?.[1].value).toBe('Response body parsed');
+			expect(childSpan.annotations?.[1].timestamp).not.toBe(0);
 		});
 
 		test('You can add a single span with attributes and events', async () => {
@@ -199,7 +223,11 @@ describe('Test Zipkin Exporter', () => {
 			expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 			const traceId = res.headers.get('x-trace-id');
-			const trace = await getTrace<ZipkinJson>(collectorWorker, traceId!);
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace<ZipkinJson>(collectorWorker, traceId);
 
 			// Root + child
 			expect(trace.length).toBe(2);
@@ -216,14 +244,14 @@ describe('Test Zipkin Exporter', () => {
 			expect(childSpan.parentId).toBe(rootSpan.id);
 			expect(childSpan.name).toBe(SPAN_NAME.FETCH);
 			expect(childSpan.duration).not.toBe(0);
-			expect(childSpan.tags![ATTRIBUTE_NAME.HTTP_HOST]).toBe('example.com');
+			expect(childSpan.tags?.[ATTRIBUTE_NAME.HTTP_HOST]).toBe('example.com');
 
 			// Annotations (events)
 			expect(childSpan.annotations?.length).toBe(2);
-			expect(childSpan.annotations![0].value).toBe('Fetch done');
-			expect(childSpan.annotations![0].timestamp).not.toBe(0);
-			expect(childSpan.annotations![1].value).toBe('Response body parsed');
-			expect(childSpan.annotations![1].timestamp).not.toBe(0);
+			expect(childSpan.annotations?.[0].value).toBe('Fetch done');
+			expect(childSpan.annotations?.[0].timestamp).not.toBe(0);
+			expect(childSpan.annotations?.[1].value).toBe('Response body parsed');
+			expect(childSpan.annotations?.[1].timestamp).not.toBe(0);
 		});
 	});
 
@@ -239,7 +267,11 @@ describe('Test Zipkin Exporter', () => {
 			expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 			const traceId = res.headers.get('x-trace-id');
-			const trace = await getTrace<ZipkinJson>(collectorWorker, traceId!);
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace<ZipkinJson>(collectorWorker, traceId);
 
 			// Root + 2 children
 			expect(trace.length).toBe(3);
@@ -276,7 +308,11 @@ describe('Test Zipkin Exporter', () => {
 			expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 			const traceId = res.headers.get('x-trace-id');
-			const trace = await getTrace<ZipkinJson>(collectorWorker, traceId!);
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace<ZipkinJson>(collectorWorker, traceId);
 
 			// Root + 2 children
 			expect(trace.length).toBe(3);
@@ -293,7 +329,7 @@ describe('Test Zipkin Exporter', () => {
 			expect(firstChildSpan.parentId).toBe(rootSpan.id);
 			expect(firstChildSpan.name).toBe(SPAN_NAME.FETCH);
 			expect(firstChildSpan.duration).not.toBe(0);
-			expect(firstChildSpan.tags![ATTRIBUTE_NAME.HTTP_HOST]).toBe('example.com');
+			expect(firstChildSpan.tags?.[ATTRIBUTE_NAME.HTTP_HOST]).toBe('example.com');
 
 			// Second child span
 			const secondChildSpan = trace[2];
@@ -301,7 +337,7 @@ describe('Test Zipkin Exporter', () => {
 			expect(secondChildSpan.parentId).toBe(rootSpan.id);
 			expect(secondChildSpan.name).toBe(SPAN_NAME.KV_GET);
 			expect(secondChildSpan.duration).not.toBe(0);
-			expect(secondChildSpan.tags![ATTRIBUTE_NAME.KV_KEY]).toBe('abc');
+			expect(secondChildSpan.tags?.[ATTRIBUTE_NAME.KV_KEY]).toBe('abc');
 		});
 
 		test('You can add multiple spans with events', async () => {
@@ -315,7 +351,11 @@ describe('Test Zipkin Exporter', () => {
 			expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 			const traceId = res.headers.get('x-trace-id');
-			const trace = await getTrace<ZipkinJson>(collectorWorker, traceId!);
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace<ZipkinJson>(collectorWorker, traceId);
 
 			// Root + 2 children
 			expect(trace.length).toBe(3);
@@ -335,10 +375,10 @@ describe('Test Zipkin Exporter', () => {
 
 			// - Annotations (events)
 			expect(firstChildSpan.annotations?.length).toBe(2);
-			expect(firstChildSpan.annotations![0].value).toBe('Fetch done');
-			expect(firstChildSpan.annotations![0].timestamp).not.toBe(0);
-			expect(firstChildSpan.annotations![1].value).toBe('Response body parsed');
-			expect(firstChildSpan.annotations![1].timestamp).not.toBe(0);
+			expect(firstChildSpan.annotations?.[0].value).toBe('Fetch done');
+			expect(firstChildSpan.annotations?.[0].timestamp).not.toBe(0);
+			expect(firstChildSpan.annotations?.[1].value).toBe('Response body parsed');
+			expect(firstChildSpan.annotations?.[1].timestamp).not.toBe(0);
 
 			// Second child span
 			const secondChildSpan = trace[2];
@@ -349,8 +389,8 @@ describe('Test Zipkin Exporter', () => {
 
 			// - Annotations (events)
 			expect(secondChildSpan.annotations?.length).toBe(1);
-			expect(secondChildSpan.annotations![0].value).toBe('KV get done');
-			expect(secondChildSpan.annotations![0].timestamp).not.toBe(0);
+			expect(secondChildSpan.annotations?.[0].value).toBe('KV get done');
+			expect(secondChildSpan.annotations?.[0].timestamp).not.toBe(0);
 		});
 
 		test('You can add multiple spans with attributes and events', async () => {
@@ -364,7 +404,11 @@ describe('Test Zipkin Exporter', () => {
 			expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 			const traceId = res.headers.get('x-trace-id');
-			const trace = await getTrace<ZipkinJson>(collectorWorker, traceId!);
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace<ZipkinJson>(collectorWorker, traceId);
 
 			// Root + 2 children
 			expect(trace.length).toBe(3);
@@ -381,14 +425,14 @@ describe('Test Zipkin Exporter', () => {
 			expect(firstChildSpan.parentId).toBe(rootSpan.id);
 			expect(firstChildSpan.name).toBe(SPAN_NAME.FETCH);
 			expect(firstChildSpan.duration).not.toBe(0);
-			expect(firstChildSpan.tags![ATTRIBUTE_NAME.HTTP_HOST]).toBe('example.com');
+			expect(firstChildSpan.tags?.[ATTRIBUTE_NAME.HTTP_HOST]).toBe('example.com');
 
 			// - Annotations (events)
 			expect(firstChildSpan.annotations?.length).toBe(2);
-			expect(firstChildSpan.annotations![0].value).toBe('Fetch done');
-			expect(firstChildSpan.annotations![0].timestamp).not.toBe(0);
-			expect(firstChildSpan.annotations![1].value).toBe('Response body parsed');
-			expect(firstChildSpan.annotations![1].timestamp).not.toBe(0);
+			expect(firstChildSpan.annotations?.[0].value).toBe('Fetch done');
+			expect(firstChildSpan.annotations?.[0].timestamp).not.toBe(0);
+			expect(firstChildSpan.annotations?.[1].value).toBe('Response body parsed');
+			expect(firstChildSpan.annotations?.[1].timestamp).not.toBe(0);
 
 			// Second child span
 			const secondChildSpan = trace[2];
@@ -396,12 +440,12 @@ describe('Test Zipkin Exporter', () => {
 			expect(secondChildSpan.parentId).toBe(rootSpan.id);
 			expect(secondChildSpan.name).toBe(SPAN_NAME.KV_GET);
 			expect(secondChildSpan.duration).not.toBe(0);
-			expect(secondChildSpan.tags![ATTRIBUTE_NAME.KV_KEY]).toBe('abc');
+			expect(secondChildSpan.tags?.[ATTRIBUTE_NAME.KV_KEY]).toBe('abc');
 
 			// - Annotations (events)
 			expect(secondChildSpan.annotations?.length).toBe(1);
-			expect(secondChildSpan.annotations![0].value).toBe('KV get done');
-			expect(secondChildSpan.annotations![0].timestamp).not.toBe(0);
+			expect(secondChildSpan.annotations?.[0].value).toBe('KV get done');
+			expect(secondChildSpan.annotations?.[0].timestamp).not.toBe(0);
 		});
 	});
 
@@ -417,7 +461,11 @@ describe('Test Zipkin Exporter', () => {
 			expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 			const traceId = res.headers.get('x-trace-id');
-			const trace = await getTrace<ZipkinJson>(collectorWorker, traceId!);
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace<ZipkinJson>(collectorWorker, traceId);
 
 			// Root + 2 children
 			expect(trace.length).toBe(3);
@@ -455,7 +503,11 @@ describe('Test Zipkin Exporter', () => {
 			expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 			const traceId = res.headers.get('x-trace-id');
-			const trace = await getTrace<ZipkinJson>(collectorWorker, traceId!);
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace<ZipkinJson>(collectorWorker, traceId);
 
 			// Root + 2 children
 			expect(trace.length).toBe(3);
@@ -472,7 +524,7 @@ describe('Test Zipkin Exporter', () => {
 			expect(firstChildSpan.parentId).toBe(rootSpan.id);
 			expect(firstChildSpan.name).toBe(SPAN_NAME.FETCH);
 			expect(firstChildSpan.duration).not.toBe(0);
-			expect(firstChildSpan.tags![ATTRIBUTE_NAME.HTTP_HOST]).toBe('example.com');
+			expect(firstChildSpan.tags?.[ATTRIBUTE_NAME.HTTP_HOST]).toBe('example.com');
 
 			// Second child span
 			const secondChildSpan = trace[2];
@@ -481,7 +533,7 @@ describe('Test Zipkin Exporter', () => {
 			expect(secondChildSpan.parentId).toBe(firstChildSpan.id);
 			expect(secondChildSpan.name).toBe(SPAN_NAME.KV_GET);
 			expect(secondChildSpan.duration).not.toBe(0);
-			expect(secondChildSpan.tags![ATTRIBUTE_NAME.KV_KEY]).toBe('abc');
+			expect(secondChildSpan.tags?.[ATTRIBUTE_NAME.KV_KEY]).toBe('abc');
 		});
 
 		test('You can add a child to a child span with events', async () => {
@@ -495,7 +547,11 @@ describe('Test Zipkin Exporter', () => {
 			expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 			const traceId = res.headers.get('x-trace-id');
-			const trace = await getTrace<ZipkinJson>(collectorWorker, traceId!);
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace<ZipkinJson>(collectorWorker, traceId);
 
 			// Root + 2 children
 			expect(trace.length).toBe(3);
@@ -515,10 +571,10 @@ describe('Test Zipkin Exporter', () => {
 
 			// - Annotations (events)
 			expect(firstChildSpan.annotations?.length).toBe(2);
-			expect(firstChildSpan.annotations![0].value).toBe('Fetch done');
-			expect(firstChildSpan.annotations![0].timestamp).not.toBe(0);
-			expect(firstChildSpan.annotations![1].value).toBe('Response body parsed');
-			expect(firstChildSpan.annotations![1].timestamp).not.toBe(0);
+			expect(firstChildSpan.annotations?.[0].value).toBe('Fetch done');
+			expect(firstChildSpan.annotations?.[0].timestamp).not.toBe(0);
+			expect(firstChildSpan.annotations?.[1].value).toBe('Response body parsed');
+			expect(firstChildSpan.annotations?.[1].timestamp).not.toBe(0);
 
 			// Second child span
 			const secondChildSpan = trace[2];
@@ -530,8 +586,8 @@ describe('Test Zipkin Exporter', () => {
 
 			// - Annotations (events)
 			expect(secondChildSpan.annotations?.length).toBe(1);
-			expect(secondChildSpan.annotations![0].value).toBe('KV get done');
-			expect(secondChildSpan.annotations![0].timestamp).not.toBe(0);
+			expect(secondChildSpan.annotations?.[0].value).toBe('KV get done');
+			expect(secondChildSpan.annotations?.[0].timestamp).not.toBe(0);
 		});
 
 		test('You can add a child to a child span with attributes and events', async () => {
@@ -545,7 +601,11 @@ describe('Test Zipkin Exporter', () => {
 			expect(res.headers.get('x-trace-id')).not.toBeNull();
 
 			const traceId = res.headers.get('x-trace-id');
-			const trace = await getTrace<ZipkinJson>(collectorWorker, traceId!);
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace<ZipkinJson>(collectorWorker, traceId);
 
 			// Root + 2 children
 			expect(trace.length).toBe(3);
@@ -562,14 +622,14 @@ describe('Test Zipkin Exporter', () => {
 			expect(firstChildSpan.parentId).toBe(rootSpan.id);
 			expect(firstChildSpan.name).toBe(SPAN_NAME.FETCH);
 			expect(firstChildSpan.duration).not.toBe(0);
-			expect(firstChildSpan.tags![ATTRIBUTE_NAME.HTTP_HOST]).toBe('example.com');
+			expect(firstChildSpan.tags?.[ATTRIBUTE_NAME.HTTP_HOST]).toBe('example.com');
 
 			// - Annotations (events)
 			expect(firstChildSpan.annotations?.length).toBe(2);
-			expect(firstChildSpan.annotations![0].value).toBe('Fetch done');
-			expect(firstChildSpan.annotations![0].timestamp).not.toBe(0);
-			expect(firstChildSpan.annotations![1].value).toBe('Response body parsed');
-			expect(firstChildSpan.annotations![1].timestamp).not.toBe(0);
+			expect(firstChildSpan.annotations?.[0].value).toBe('Fetch done');
+			expect(firstChildSpan.annotations?.[0].timestamp).not.toBe(0);
+			expect(firstChildSpan.annotations?.[1].value).toBe('Response body parsed');
+			expect(firstChildSpan.annotations?.[1].timestamp).not.toBe(0);
 
 			// Second child span
 			const secondChildSpan = trace[2];
@@ -578,12 +638,12 @@ describe('Test Zipkin Exporter', () => {
 			expect(secondChildSpan.parentId).toBe(firstChildSpan.id);
 			expect(secondChildSpan.name).toBe(SPAN_NAME.KV_GET);
 			expect(secondChildSpan.duration).not.toBe(0);
-			expect(secondChildSpan.tags![ATTRIBUTE_NAME.KV_KEY]).toBe('abc');
+			expect(secondChildSpan.tags?.[ATTRIBUTE_NAME.KV_KEY]).toBe('abc');
 
 			// - Annotations (events)
 			expect(secondChildSpan.annotations?.length).toBe(1);
-			expect(secondChildSpan.annotations![0].value).toBe('KV get done');
-			expect(secondChildSpan.annotations![0].timestamp).not.toBe(0);
+			expect(secondChildSpan.annotations?.[0].value).toBe('KV get done');
+			expect(secondChildSpan.annotations?.[0].timestamp).not.toBe(0);
 		});
 	});
 });

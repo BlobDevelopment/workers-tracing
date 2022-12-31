@@ -22,9 +22,9 @@ export default {
 
 		await trace.trace(SPAN_NAME.KV_GET, () => env.KV.get('abc'), {
 			attributes: { [ATTRIBUTE_NAME.KV_KEY]: 'abc' },
-		})
+		});
 
 		await trace.send();
 		return new Response('ok', { headers: { 'x-trace-id': trace.getTraceId() } });
 	},
-}
+};

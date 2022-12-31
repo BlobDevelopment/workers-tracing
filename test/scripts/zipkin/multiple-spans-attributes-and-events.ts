@@ -23,7 +23,7 @@ export default {
 		const res = await fetch('https://example.com');
 		fetchSpan.addEvent({ name: 'Fetch done', timestamp: Date.now() });
 
-		const text = await res.text();
+		await res.text();
 		fetchSpan.addEvent({ name: 'Response body parsed', timestamp: Date.now() });
 		fetchSpan.end();
 
@@ -38,4 +38,4 @@ export default {
 		await trace.send();
 		return new Response('ok', { headers: { 'x-trace-id': trace.getTraceId() } });
 	},
-}
+};
