@@ -73,7 +73,7 @@ describe('Test Zipkin Exporter', () => {
 			expect(span.tags?.[ATTRIBUTE_NAME.SERVICE_NAME]).toBe('zipkin-basic');
 			expect(span.tags?.[ATTRIBUTE_NAME.SDK_NAME]).toBe('workers-tracing');
 			expect(span.tags?.[ATTRIBUTE_NAME.SDK_LANG]).toBe('javascript');
-			expect(span.tags?.[ATTRIBUTE_NAME.SDK_VERSION]).toBe('$VERSION$');
+			expect(span.tags?.[ATTRIBUTE_NAME.SDK_VERSION]).toBe('__VERSION__');
 			expect(span.tags?.[ATTRIBUTE_NAME.RUNTIME_NAME]).toBe('Cloudflare-Workers');
 		});
 
@@ -101,7 +101,7 @@ describe('Test Zipkin Exporter', () => {
 			expect(span.tags?.[ATTRIBUTE_NAME.SERVICE_NAME]).toBe('resource-attributes');
 			expect(span.tags?.[ATTRIBUTE_NAME.SDK_NAME]).toBe('workers-tracing');
 			expect(span.tags?.[ATTRIBUTE_NAME.SDK_LANG]).toBe('javascript');
-			expect(span.tags?.[ATTRIBUTE_NAME.SDK_VERSION]).toBe('$VERSION$');
+			expect(span.tags?.[ATTRIBUTE_NAME.SDK_VERSION]).toBe('__VERSION__');
 			
 			// Custom attributes
 			expect(span.tags?.['exampleAttribute']).toBe('true');

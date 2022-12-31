@@ -87,7 +87,7 @@ describe('Test OTLP Exporter', () => {
 			expect(resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SDK_LANG))
 				.toStrictEqual({ key: ATTRIBUTE_NAME.SDK_LANG, value: { stringValue: 'javascript' } });
 			expect(resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SDK_VERSION))
-				.toStrictEqual({ key: ATTRIBUTE_NAME.SDK_VERSION, value: { stringValue: '$VERSION$' } });
+				.toStrictEqual({ key: ATTRIBUTE_NAME.SDK_VERSION, value: { stringValue: '__VERSION__' } });
 			expect(resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.RUNTIME_NAME))
 				.toStrictEqual({ key: ATTRIBUTE_NAME.RUNTIME_NAME, value: { stringValue: 'Cloudflare-Workers' } });
 		});
@@ -124,7 +124,7 @@ describe('Test OTLP Exporter', () => {
 			expect(resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SDK_LANG))
 				.toStrictEqual({ key: ATTRIBUTE_NAME.SDK_LANG, value: { stringValue: 'javascript' } });
 			expect(resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SDK_VERSION))
-				.toStrictEqual({ key: ATTRIBUTE_NAME.SDK_VERSION, value: { stringValue: '$VERSION$' } });
+				.toStrictEqual({ key: ATTRIBUTE_NAME.SDK_VERSION, value: { stringValue: '__VERSION__' } });
 
 			// Custom attributes
 			expect(resource.attributes.find((attribute) => attribute.key === 'exampleAttribute'))

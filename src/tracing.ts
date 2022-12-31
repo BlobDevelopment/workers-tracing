@@ -24,7 +24,7 @@ export function getDefaultAttributes(opts: TracerOptions): Attributes {
 		[ATTRIBUTE_NAME.SERVICE_NAME]: opts.serviceName,
 		[ATTRIBUTE_NAME.SDK_NAME]: 'workers-tracing',
 		[ATTRIBUTE_NAME.SDK_LANG]: 'javascript',
-		[ATTRIBUTE_NAME.SDK_VERSION]: '$VERSION$', // TODO: define in esbuild
+		[ATTRIBUTE_NAME.SDK_VERSION]: '__VERSION__',
 		[ATTRIBUTE_NAME.RUNTIME_NAME]: navigator.userAgent, // Cloudflare-Workers
 	};
 }
