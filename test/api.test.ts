@@ -72,8 +72,8 @@ describe('API', () => {
 				const span = resourceSpan.scopeSpans[0].spans[0];
 
 				// Sanity check trace ID
-				expect(span.traceId.length).toBe(16);
-				expect(span.traceId).toMatch(/[a-f0-9]{16}/);
+				expect(span.spanId.length).toBe(16);
+				expect(span.spanId).toMatch(/[a-f0-9]{16}/);
 			});
 		});
 
@@ -275,7 +275,7 @@ describe('API', () => {
 				// Validate events
 				expect(span.events.length).toBe(1);
 				expect(span.events[0].name).toBe('Fetch done');
-				expect(span.events[0].timestamp).not.toBe(0);
+				expect(span.events[0].timeUnixNano).not.toBe(0);
 			});
 
 			test('Root span with links', async () => {

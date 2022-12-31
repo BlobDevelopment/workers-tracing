@@ -1,7 +1,7 @@
-import { OtlpTransformer } from 'src/transformers/otlp';
+import { OtlpJson } from 'src/transformers/otlp';
 import { UnstableDevWorker } from 'wrangler';
 
-export async function getTrace<T = OtlpTransformer>(
+export async function getTrace<T = OtlpJson>(
 	collectorWorker: UnstableDevWorker,
 	traceId: string,
 ) {

@@ -26,14 +26,15 @@ interface OtlpScope {
 interface OtlpSpan {
 	traceId: string;
 	spanId: string;
+	parentSpanId?: string;
 	name: string;
 	kind: number;
 	startTimeUnixNano: number;
 	endTimeUnixNano: number;
 	attributes: OtlpAttribute[];
-	events: any[];
+	events: OtlpEvent[];
 	status: OtlpStatus;
-	links: any[];
+	links: OtlpLink[];
 }
 
 interface OtlpStatus {
@@ -52,6 +53,18 @@ interface OtlpValue {
 	// TODO: double?
 
 	arrayValue?: { values: OtlpValue[] };
+}
+
+interface OtlpEvent {
+	name: string;
+	timeUnixNano: number;
+	attributes: OtlpAttribute[];
+}
+
+interface OtlpLink {
+	traceId: string;
+	spanId: string;
+	attributes: OtlpAttribute[];
 }
 
 type TransformValue = (value: Attribute) => OtlpValue | null;
@@ -125,7 +138,7 @@ export class OtlpTransformer extends TraceTransformer {
 		return transformed;
 	}
 
-	transformSpan(span: Span) {
+	transformSpan(span: Span): OtlpSpan {
 		const data = span.getData();
 
 		return {

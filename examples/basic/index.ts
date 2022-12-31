@@ -1,6 +1,6 @@
 import { createTrace, traceFn } from 'src/index';
 import { Trace } from 'src/tracing';
-import { SPAN_NAME } from 'src/utils/constants';
+import { ATTRIBUTE_NAME, SPAN_NAME } from 'src/utils/constants';
 
 interface Env {
 	AUTH_TOKEN: string;
@@ -27,8 +27,8 @@ export default {
 
 		await env.KV.put('abc', 'def');
 
-		const val = await traceFn(span, SPAN_NAME.KV_GET, () => env.KV.get('abc'), { attributes: { key: 'abc '} });
-		span.addEvent({ name: 'Fetch done', timestamp: Date.now() });
+		const val = await traceFn(span, SPAN_NAME.KV_GET, () => env.KV.get('abc'), { attributes: { [ATTRIBUTE_NAME.KV_KEY]: 'abc '} });
+		span.addEvent({ name: 'KV lookup', timestamp: Date.now(), attributes: { [ATTRIBUTE_NAME.KV_KEY]: 'abc' } });
 
 		span.end();
 		await trace.send();
