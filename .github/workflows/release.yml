@@ -27,7 +27,7 @@ jobs:
       run: npm run record-sizes
 
     - name: Version
-      run: npx changeset version
+      run: GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} npx changeset version
 
     # Make sure package-lock.json is updated
     - name: Re-install
