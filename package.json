@@ -36,7 +36,7 @@
 		"build:types": "tsc -p tsconfig.emit.json",
 		"record-sizes": "rm -rf dist && npm run build && gzip dist/workers-tracing.mjs dist/workers-tracing.cjs && npm run build && ls -lah dist",
 		"test": "vitest",
-		"test:ci": "vitest run --watch false",
+		"test:ci": "vitest run --watch false --no-threads",
 		"lint": "eslint --ext js,ts src test",
 		"lint:fix": "eslint --fix --ext js,ts src test",
 		"changeset": "npx changeset"
