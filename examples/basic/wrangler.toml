@@ -1,6 +1,6 @@
 name = "basic"
 compatibility_date = "2022-12-27"
-main = "index.ts"
+main = "basic.ts"
 
 [[kv_namespaces]]
 binding = "KV"
