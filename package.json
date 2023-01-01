@@ -34,7 +34,7 @@
 		"jaeger"
 	],
 	"scripts": {
-		"build": "rm -rf dist && npm run build:esm && npm run build:cjs && npm run build:types",
+		"build": "npm run build:esm && npm run build:cjs && npm run build:types",
 		"build:esm": "node build.js esm",
 		"build:cjs": "node build.js cjs",
 		"build:types": "tsc -p tsconfig.emit.json",
