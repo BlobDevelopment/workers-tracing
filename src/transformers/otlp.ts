@@ -51,7 +51,7 @@ export interface OtlpValue {
 	stringValue?: string;
 	intValue?: number;
 	boolValue?: boolean;
-	// TODO: double?
+	doubleValue?: number;
 
 	arrayValue?: { values: OtlpValue[] };
 }
@@ -116,7 +116,11 @@ export class OtlpTransformer extends TraceTransformer {
 				if (typeof value === 'string') {
 					return { stringValue: value };
 				} else if (typeof value === 'number') {
-					return { intValue: value };
+					if (Number.isInteger(value)) {
+						return { intValue: value };
+					} else {
+						return { doubleValue: value };
+					}
 				} else if (typeof value === 'boolean') {
 					return { boolValue: value };
 				} else {
