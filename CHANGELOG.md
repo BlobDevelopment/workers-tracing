@@ -1,5 +1,13 @@
 # workers-tracing
 
+## 0.0.3
+
+### Patch Changes
+
+- [`2a29509`](https://github.com/BlobDevelopment/workers-tracing/commit/2a29509aa0dac8855a45826645e775d329160fc2) Thanks [@WalshyDev](https://github.com/WalshyDev)! - Fix headers being attached to the collector fetch in the case of a non-header object.
+
+- [`1ea04f8`](https://github.com/BlobDevelopment/workers-tracing/commit/1ea04f828ec04d6d089c9c3a2e6deb3e75f4aeb4) Thanks [@WalshyDev](https://github.com/WalshyDev)! - Add support for doubleValue to OTLP
+
 ## 0.0.2
 
 ### Patch Changes
