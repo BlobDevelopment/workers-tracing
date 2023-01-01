@@ -1,6 +1,6 @@
 {
 	"name": "workers-tracing",
-	"version": "0.0.0",
+	"version": "0.0.1",
 	"description": "Enable tracing within Workers with this simple package! Simply trace and send to a collector with a compatible export format",
 	"author": "Daniel Walsh (@WalshyDev)",
 	"license": "MIT",
@@ -8,6 +8,10 @@
 	"main": "dist/workers-tracing.cjs",
 	"module": "dist/workers-tracing.mjs",
 	"types": "dist/index.d.ts",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/BlobDevelopment/workers-tracing.git"
+	},
 	"exports": {
 		".": {
 			"require": "./dist/workers-tracing.cjs",

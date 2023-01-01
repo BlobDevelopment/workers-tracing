@@ -29,6 +29,10 @@ jobs:
     - name: Version
       run: npx changeset version
 
+    # Make sure package-lock.json is updated
+    - name: Re-install
+      run: npm install
+
     - name: Build
       run: npm run build
 
