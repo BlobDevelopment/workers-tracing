@@ -12,8 +12,8 @@ export default {
 			serviceName: 'multiple-spans-events',
 			collector: {
 				url: 'http://0.0.0.0:9411/api/v2/spans', // Zipkin compatible Jaeger endpoint
+				transformer: new ZipkinTransformer(),
 			},
-			transformer: new ZipkinTransformer(),
 		});
 
 		const fetchSpan = trace.startSpan(SPAN_NAME.FETCH);

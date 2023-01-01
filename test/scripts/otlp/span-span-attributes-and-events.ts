@@ -12,8 +12,8 @@ export default {
 			serviceName: 'span-span-attributes-and-events',
 			collector: {
 				url: 'http://0.0.0.0:4318/v1/traces', // OTLP compatible Jaeger endpoint
+				transformer: new OtlpTransformer(),
 			},
-			transformer: new OtlpTransformer(),
 		});
 
 		const fetchSpan = trace.startSpan(SPAN_NAME.FETCH, {

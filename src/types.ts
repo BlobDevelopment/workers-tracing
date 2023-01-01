@@ -1,4 +1,5 @@
 import { StatusCode } from './tracing';
+import { TraceTransformer } from './transformers/transformer';
 
 export interface TraceData {
 	// 8 bit field currently only used to indicate sampling
@@ -120,12 +121,12 @@ export interface TracerOptions {
 	collector: CollectorOptions;
 	resource?: ResourceOptions;
 	traceContext?: SpanContext;
-	transformer?: unknown; // TODO: Move to CollectorOptions
 }
 
 export interface CollectorOptions {
 	url: string;
 	headers?: HeadersInit;
+	transformer?: TraceTransformer;
 }
 
 export interface ResourceOptions {

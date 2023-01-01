@@ -10,8 +10,8 @@ export default {
 			serviceName: 'single-span-attributes-and-events',
 			collector: {
 				url: 'http://0.0.0.0:9411/api/v2/spans', // Zipkin compatible Jaeger endpoint
+				transformer: new ZipkinTransformer(),
 			},
-			transformer: new ZipkinTransformer(),
 		});
 
 		const span = trace.startSpan(SPAN_NAME.FETCH, {

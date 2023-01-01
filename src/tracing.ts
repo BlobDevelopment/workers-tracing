@@ -1,5 +1,4 @@
 import { OtlpTransformer } from './transformers/otlp';
-import { TraceTransformer } from './transformers/transformer';
 import { ATTRIBUTE_NAME } from './utils/constants';
 import { generateSpanId, generateTraceId } from './utils/rand';
 import { traceFn } from './trace';
@@ -101,11 +100,11 @@ export class Span {
 export class Trace extends Span {
 
 	#ctx: ExecutionContext;
-	#tracerOptions: TracerOptions & { transformer?: TraceTransformer };
+	#tracerOptions: TracerOptions;
 
 	constructor(
 		ctx: ExecutionContext,
-		tracerOptions: TracerOptions & { transformer?: TraceTransformer },
+		tracerOptions: TracerOptions,
 		spanOptions?: SpanCreationOptions,
 	) {
 		super(
@@ -156,8 +155,8 @@ export class Trace extends Span {
 		headers['x-trace-id'] = this.getTraceId();
 
 		let body;
-		if (this.#tracerOptions.transformer) {
-			body = this.#tracerOptions.transformer.transform(this);
+		if (this.#tracerOptions.collector.transformer) {
+			body = this.#tracerOptions.collector.transformer.transform(this);
 		} else {
 			body = new OtlpTransformer().transform(this);
 		}

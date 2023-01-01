@@ -10,8 +10,8 @@ export default {
 			serviceName: 'resource-attributes',
 			collector: {
 				url: 'http://0.0.0.0:4318/v1/traces', // OTLP compatible Jaeger endpoint
+				transformer: new OtlpTransformer(),
 			},
-			transformer: new OtlpTransformer(),
 			resource: {
 				attributes: {
 					exampleAttribute: true,

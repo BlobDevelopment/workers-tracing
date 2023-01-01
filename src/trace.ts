@@ -9,7 +9,8 @@ export function createTrace(
 	spanOptions?: SpanCreationOptions,
 ): Trace {
 	// This is ugly
-	// TODO: Fix this
+	// TODO: Fix this - https://www.w3.org/TR/trace-context/#traceparent-header
+	// https://zipkin.io/pages/architecture.html - https://github.com/openzipkin/b3-propagation#overall-process
 	// This parent context will allow properly tracing across services (and other Workers)
 	let parentContext: SpanContext | undefined;
 	if ((req.cf as CfWithTrace)?.traceContext) {
@@ -22,9 +23,6 @@ export function createTrace(
 		}
 	}
 
-	// TODO: Transformer type fix needed
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
 	const trace = new Trace(ctx, {
 		traceContext: parentContext,
 		...tracerOptions,

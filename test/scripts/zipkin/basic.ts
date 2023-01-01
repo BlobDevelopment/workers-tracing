@@ -9,8 +9,8 @@ export default {
 			serviceName: 'zipkin-basic',
 			collector: {
 				url: 'http://0.0.0.0:9411/api/v2/spans', // Zipkin compatible Jaeger endpoint
+				transformer: new ZipkinTransformer(),
 			},
-			transformer: new ZipkinTransformer(),
 		});
 
 		await trace.send();
