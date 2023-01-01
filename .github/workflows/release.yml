@@ -26,20 +26,10 @@ jobs:
     - name: Check size
       run: npm run record-sizes
 
-    - name: Version
-      run: GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} npx changeset version
-
-    # Make sure package-lock.json is updated
-    - name: Re-install
-      run: npm install
-
-    - name: Build
-      run: npm run build
-
     - name: Create Release PR or publish
       uses: changesets/action@v1
       with:
-        publish: npx changeset publish
+        publish: npm run publish
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -43,7 +43,8 @@
 		"test:ci": "vitest run --watch false --no-threads",
 		"lint": "eslint --ext js,ts src test",
 		"lint:fix": "eslint --fix --ext js,ts src test",
-		"changeset": "npx changeset"
+		"changeset": "npx changeset",
+		"publish": "npm run build && npx changeset publish"
 	},
 	"devDependencies": {
 		"@changesets/changelog-github": "^0.4.8",
