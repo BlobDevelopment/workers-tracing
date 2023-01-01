@@ -72,9 +72,6 @@ export class Span {
 	startSpan(name: string, spanOptions?: SpanCreationOptions): Span {
 		const span = new Span(this.#span.traceId, name, spanOptions);
 		span.#span.parentId = this.getSpanId();
-
-		// TODO: Figure out how to get this attached to Trace
-		// Do I like this?
 		this.#childSpans.push(span);
 
 		return span;
@@ -145,14 +142,17 @@ export class Trace extends Span {
 		// We need to end the trace here
 		this.end();
 
-		// TODO: Properly fix this
-		const headers = this.#tracerOptions.collector.headers || {};
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore
-		headers['Content-Type'] = 'application/json';
-		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-		// @ts-ignore		
-		headers['x-trace-id'] = this.getTraceId();
+		const headers = new Headers(this.#tracerOptions.collector.headers);
+		if (headers.has('content-type')) {
+			// We want to override this since we will pass JSON
+			headers.delete('content-type');
+			headers.append('content-type', 'application/json');
+		}
+
+		// TODO: Properly pass trace context down and update the tests
+		if (!headers.has('x-trace-id')) {
+			headers.append('x-trace-id', this.getTraceId());
+		}
 
 		let body;
 		if (this.#tracerOptions.collector.transformer) {
