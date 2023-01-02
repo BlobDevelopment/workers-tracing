@@ -3,7 +3,7 @@
 Workers tracing is a small (~2.6 KB compressed), zero-dependency library for having distributed tracing within [Cloudflare Workers](https://workers.cloudflare.com/).
 
 There are currently 2 different formats supported:
-- [OpenTelemtry](https://opentelemetry.io/) is a standard tracing/metrics/logs format. It has wide support in many different services such as [Jaeger](https://www.jaegertracing.io/).
+- [OpenTelemetry](https://opentelemetry.io/) is a standard tracing/metrics/logs format. It has wide support in many different services such as [Jaeger](https://www.jaegertracing.io/).
 - [Zipkin](https://zipkin.io/) is another widely adopted format which is focused on tracing.
 
 > **Warning**
@@ -109,13 +109,13 @@ export default {
 
 ### Jaeger
 
-To send traces to the Jaeger [OpenTelemetry compatible collector](https://www.jaegertracing.io/docs/1.40/deployment/#collector) you will need to make sure Jaeger is configured to accept [OpenTelemtry](https://opentelemetry.io/) or [Zipkin](https://zipkin.io/).
+To send traces to the Jaeger [OpenTelemetry compatible collector](https://www.jaegertracing.io/docs/1.40/deployment/#collector) you will need to make sure Jaeger is configured to accept [OpenTelemetry](https://opentelemetry.io/) or [Zipkin](https://zipkin.io/).
 
-For [OpenTelemtry](https://opentelemetry.io/) you will need to enable the compatibility support with `COLLECTOR_OTLP_ENABLED=true` (and make sure port `4318` is mapped).
+For [OpenTelemetry](https://opentelemetry.io/) you will need to enable the compatibility support with `COLLECTOR_OTLP_ENABLED=true` (and make sure port `4318` is mapped).
 
 For [Zipkin](https://zipkin.io/) you will need to enable the JSON compatible layer by setting `COLLECTOR_ZIPKIN_HOST_PORT=:9411` (or a different port - make sure to map this).
 
-Here is an example command to run the `all-in-one` Docker image with the [OpenTelemtry](https://opentelemetry.io/) and [Zipkin](https://zipkin.io/) compatible collector enabled:
+Here is an example command to run the `all-in-one` Docker image with the [OpenTelemetry](https://opentelemetry.io/) and [Zipkin](https://zipkin.io/) compatible collector enabled:
 ```sh
 $ docker run -d --name jaeger \
   -e COLLECTOR_ZIPKIN_HOST_PORT=:9411 \
