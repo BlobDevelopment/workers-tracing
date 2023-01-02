@@ -168,6 +168,9 @@ export class Trace extends Span {
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		if (globalThis.MINIFLARE) {
+			console.log(`Sending to: ${this.#tracerOptions.collector.url}`);
+			console.log(headers);
+			console.log(body);
 			const res = await fetch(this.#tracerOptions.collector.url, {
 				method: 'POST',
 				headers,
