@@ -12,6 +12,11 @@ export default {
 			pathname === '/v1/traces' // Jaeger OTLP
 			|| pathname === '/api/v2/spans' // Jaeger Zipkin
 		) {
+			// Validation
+			if (req.headers.get('content-type') !== 'application/json') {
+				return Response.json({ error: '"content-type: application/json" is required' }, { status: 400 });
+			}
+
 			const body = await req.json();
 
 			const traceId = req.headers.get('x-trace-id');

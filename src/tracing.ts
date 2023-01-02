@@ -146,8 +146,8 @@ export class Trace extends Span {
 		if (headers.has('content-type')) {
 			// We want to override this since we will pass JSON
 			headers.delete('content-type');
-			headers.append('content-type', 'application/json');
 		}
+		headers.append('content-type', 'application/json');
 
 		// TODO: Properly pass trace context down and update the tests
 		if (!headers.has('x-trace-id')) {
@@ -168,6 +168,9 @@ export class Trace extends Span {
 		// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 		// @ts-ignore
 		if (globalThis.MINIFLARE) {
+			console.log(`Sending to: ${this.#tracerOptions.collector.url}`);
+			console.log(headers);
+			console.log(body);
 			const res = await fetch(this.#tracerOptions.collector.url, {
 				method: 'POST',
 				headers,
