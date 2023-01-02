@@ -1,5 +1,11 @@
 # workers-tracing
 
+## 0.1.0
+
+### Minor Changes
+
+- [`02db552`](https://github.com/BlobDevelopment/workers-tracing/commit/02db55226eaec370a4549ded4e32ca9219174b06) Thanks [@WalshyDev](https://github.com/WalshyDev)! - Beta ready!
+
 ## 0.0.3
 
 ### Patch Changes
