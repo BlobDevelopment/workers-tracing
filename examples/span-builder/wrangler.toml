@@ -1,0 +1,8 @@
+name = "span-builder"
+main = "src/index.ts"
+compatibility_date = "2023-01-02"
+
+[[kv_namespaces]]
+binding = "KV"
+id = "a"
+preview_id = "a"
