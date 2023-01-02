@@ -1,5 +1,11 @@
 # workers-tracing
 
+## 0.1.2
+
+### Patch Changes
+
+- [`4699a88`](https://github.com/BlobDevelopment/workers-tracing/commit/4699a882fa8595d6535abc48e5b932b2b75d3ad2) Thanks [@WalshyDev](https://github.com/WalshyDev)! - Updated Zipkin example to use the package
+
 ## 0.1.0
 
 ### Minor Changes
