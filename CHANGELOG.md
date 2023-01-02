@@ -1,5 +1,13 @@
 # workers-tracing
 
+## 0.1.3
+
+### Patch Changes
+
+- [#6](https://github.com/BlobDevelopment/workers-tracing/pull/6) [`544a4c0`](https://github.com/BlobDevelopment/workers-tracing/commit/544a4c0668484c7e230bbfe040a3fa1716d27539) Thanks [@WalshyDev](https://github.com/WalshyDev)! - Add PR checks; lint, test and build
+
+- [#8](https://github.com/BlobDevelopment/workers-tracing/pull/8) [`dee468f`](https://github.com/BlobDevelopment/workers-tracing/commit/dee468f12ff4fe5395d7bcbbc76e44a358d566c1) Thanks [@WalshyDev](https://github.com/WalshyDev)! - Fixed Content-Type not being set
+
 ## 0.1.2
 
 ### Patch Changes
