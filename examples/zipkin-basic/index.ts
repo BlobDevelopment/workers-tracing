@@ -1,7 +1,4 @@
-import { createTrace, traceFn } from 'src/trace';
-import { Trace } from 'src/tracing';
-import { ZipkinTransformer } from 'src/transformers/zipkin';
-import { SPAN_NAME } from 'src/utils/constants';
+import { createTrace, SPAN_NAME, Trace, traceFn, ZipkinTransformer } from 'workers-tracing';
 
 interface Env {
 	AUTH_TOKEN: string;

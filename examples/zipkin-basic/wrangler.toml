@@ -1,4 +1,4 @@
-name = "basic"
+name = "zipkin-basic"
 compatibility_date = "2022-12-27"
 main = "index.ts"
 

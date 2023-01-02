@@ -9,7 +9,7 @@
     "js": "wrangler dev --local basic.js",
     "ts": "wrangler dev --local basic.ts"
   },
-  "dependencies": {
-    "workers-tracing": "^0.1.0"
+  "devDependencies": {
+    "workers-tracing": "^0.1.1"
   }
 }
