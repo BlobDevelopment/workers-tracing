@@ -24,7 +24,10 @@ export function getDefaultAttributes(opts: TracerOptions): Attributes {
 		[ATTRIBUTE_NAME.SDK_NAME]: 'workers-tracing',
 		[ATTRIBUTE_NAME.SDK_LANG]: 'javascript',
 		[ATTRIBUTE_NAME.SDK_VERSION]: '__VERSION__',
-		[ATTRIBUTE_NAME.RUNTIME_NAME]: navigator.userAgent, // Cloudflare-Workers
+		[ATTRIBUTE_NAME.RUNTIME_NAME]:
+			typeof navigator !== 'undefined' && navigator.userAgent  // Cloudflare-Workers
+				? navigator.userAgent
+				: 'Unknown',
 	};
 }
 
