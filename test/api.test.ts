@@ -362,4 +362,84 @@ describe('API', () => {
 			});
 		});
 	});
+
+	describe('Default attributes', () => {
+		test('Attributes are all set', async () => {
+			devWorker = await startWorker('test/scripts/api/root-span.ts');
+
+			const res = await devWorker.fetch('http://worker/test');
+
+			expect(res.status).toBe(200);
+			expect(res.headers.get('x-trace-id')).not.toBeNull();
+
+			const traceId = res.headers.get('x-trace-id');
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace(collectorWorker, traceId);
+
+			expect(trace.resourceSpans.length).toBe(1);
+			const resourceSpan = trace.resourceSpans[0];
+			const resource = resourceSpan.resource;
+
+			// Validate default attributes
+			expect(
+				resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SERVICE_NAME),
+			).toStrictEqual({ key: ATTRIBUTE_NAME.SERVICE_NAME, value: { stringValue: 'root-span' } });
+			expect(
+				resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SDK_NAME),
+			).toStrictEqual({ key: ATTRIBUTE_NAME.SDK_NAME, value: { stringValue: 'workers-tracing' } });
+			expect(
+				resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SDK_LANG),
+			).toStrictEqual({ key: ATTRIBUTE_NAME.SDK_LANG, value: { stringValue: 'javascript' } });
+			expect(
+				resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SDK_VERSION),
+			).toStrictEqual({ key: ATTRIBUTE_NAME.SDK_VERSION, value: { stringValue: '__VERSION__' } });
+			expect(
+				resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.RUNTIME_NAME),
+			).toStrictEqual({ key: ATTRIBUTE_NAME.RUNTIME_NAME, value: { stringValue: 'Cloudflare-Workers' } });
+		});
+
+		test('Attributes work with no compat date', async () => {
+			devWorker = await startWorker('test/scripts/api/root-span.ts', {
+				// Set compat date to September 2021, this is the earliest compat date possible
+				// and what it will default to if none is provided
+				compatibilityDate: '2021-09-14',
+			});
+
+			const res = await devWorker.fetch('http://worker/test');
+
+			expect(res.status).toBe(200);
+			expect(res.headers.get('x-trace-id')).not.toBeNull();
+
+			const traceId = res.headers.get('x-trace-id');
+			if (traceId === null) {
+				expect(traceId).not.toBeNull();
+				return;
+			}
+			const trace = await getTrace(collectorWorker, traceId);
+
+			expect(trace.resourceSpans.length).toBe(1);
+			const resourceSpan = trace.resourceSpans[0];
+			const resource = resourceSpan.resource;
+
+			// Validate default attributes
+			expect(
+				resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SERVICE_NAME),
+			).toStrictEqual({ key: ATTRIBUTE_NAME.SERVICE_NAME, value: { stringValue: 'root-span' } });
+			expect(
+				resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SDK_NAME),
+			).toStrictEqual({ key: ATTRIBUTE_NAME.SDK_NAME, value: { stringValue: 'workers-tracing' } });
+			expect(
+				resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SDK_LANG),
+			).toStrictEqual({ key: ATTRIBUTE_NAME.SDK_LANG, value: { stringValue: 'javascript' } });
+			expect(
+				resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.SDK_VERSION),
+			).toStrictEqual({ key: ATTRIBUTE_NAME.SDK_VERSION, value: { stringValue: '__VERSION__' } });
+			expect(
+				resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.RUNTIME_NAME),
+			).toStrictEqual({ key: ATTRIBUTE_NAME.RUNTIME_NAME, value: { stringValue: 'Unknown' } });
+		});
+	});
 });
