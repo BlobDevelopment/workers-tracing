@@ -1,11 +1,14 @@
+import { StatusCode } from 'src/tracing';
 import { ATTRIBUTE_NAME } from 'src/utils/constants';
 import { afterAll, afterEach, beforeAll, describe, expect, test } from 'vitest';
 import { UnstableDevWorker } from 'wrangler';
-import { getTrace } from './utils/trace';
+import { getTrace, requestAndGetTrace } from './utils/trace';
 import { startCollector, startWorker } from './utils/worker';
 
 let devWorker: UnstableDevWorker;
 let collectorWorker: UnstableDevWorker;
+
+const URL = 'http://worker/test';
 
 describe('API', () => {
 	beforeAll(async () => {
@@ -440,6 +443,247 @@ describe('API', () => {
 			expect(
 				resource.attributes.find((attribute) => attribute.key === ATTRIBUTE_NAME.RUNTIME_NAME),
 			).toStrictEqual({ key: ATTRIBUTE_NAME.RUNTIME_NAME, value: { stringValue: 'Unknown' } });
+		});
+	});
+
+	describe('buildSpan', () => {
+		test('Can build basic span', async () => {
+			devWorker = await startWorker('test/scripts/api/span-builder/basic.ts');
+			const trace = await requestAndGetTrace(devWorker, collectorWorker, URL);
+
+			expect(trace.resourceSpans.length).toBe(1);
+			const resourceSpan = trace.resourceSpans[0];
+
+			// Check spans
+			expect(resourceSpan.scopeSpans.length).toBe(1);
+			expect(resourceSpan.scopeSpans[0].scope.name).toBe('span-builder-basic');
+			expect(resourceSpan.scopeSpans[0].spans.length).toBe(2);
+			const span = resourceSpan.scopeSpans[0].spans[0];
+
+			// Validate root span
+			expect(span.name).toBe('Request (fetch event)');
+			expect(span.endTimeUnixNano).not.toBe(0);
+
+			// Validate builder span
+			const builderSpan = resourceSpan.scopeSpans[0].spans[1];
+			expect(builderSpan.name).toBe('fetch');
+			expect(builderSpan.startTimeUnixNano).not.toBe(0);
+			expect(builderSpan.endTimeUnixNano).not.toBe(0);
+			expect(builderSpan.endTimeUnixNano - builderSpan.startTimeUnixNano).not.toBe(0);
+		});
+
+		test('Can add attributes', async () => {
+			devWorker = await startWorker('test/scripts/api/span-builder/attributes.ts');
+			const trace = await requestAndGetTrace(devWorker, collectorWorker, URL);
+
+			expect(trace.resourceSpans.length).toBe(1);
+			const resourceSpan = trace.resourceSpans[0];
+
+			// Check spans
+			expect(resourceSpan.scopeSpans.length).toBe(1);
+			expect(resourceSpan.scopeSpans[0].scope.name).toBe('span-builder-attributes');
+			expect(resourceSpan.scopeSpans[0].spans.length).toBe(2);
+			const span = resourceSpan.scopeSpans[0].spans[0];
+
+			// Validate root span
+			expect(span.name).toBe('Request (fetch event)');
+			expect(span.endTimeUnixNano).not.toBe(0);
+
+			// Validate builder span
+			const builderSpan = resourceSpan.scopeSpans[0].spans[1];
+			expect(builderSpan.name).toBe('fetch');
+			expect(builderSpan.startTimeUnixNano).not.toBe(0);
+			expect(builderSpan.endTimeUnixNano).not.toBe(0);
+			expect(builderSpan.endTimeUnixNano - builderSpan.startTimeUnixNano).not.toBe(0);
+
+			// Should have 8 attributes
+			expect(builderSpan.attributes.length).toBe(8);
+
+			// Single value attributes
+			expect(builderSpan.attributes.find((attribute) => attribute.key === 'str'))
+				.toStrictEqual({ key: 'str', value: { stringValue: 'example.com' } });
+			expect(builderSpan.attributes.find((attribute) => attribute.key === 'int'))
+				.toStrictEqual({ key: 'int', value: { intValue: 1337 } });
+			expect(builderSpan.attributes.find((attribute) => attribute.key === 'double'))
+				.toStrictEqual({ key: 'double', value: { doubleValue: 13.37 } });
+			expect(builderSpan.attributes.find((attribute) => attribute.key === 'bool'))
+				.toStrictEqual({ key: 'bool', value: { boolValue: true } });
+
+			// Array attributes
+			expect(builderSpan.attributes.find((attribute) => attribute.key === 'strArray'))
+				.toStrictEqual({ key: 'strArray', value: {
+					arrayValue: {
+						values: [
+							{ stringValue: 'a' },
+							{ stringValue: 'b' },
+							{ stringValue: 'c' },
+						],
+					},
+				}});
+			expect(builderSpan.attributes.find((attribute) => attribute.key === 'intArray'))
+				.toStrictEqual({ key: 'intArray', value: {
+					arrayValue: {
+						values: [
+							{ intValue: 1 },
+							{ intValue: 2 },
+							{ intValue: 3 },
+						],
+					},
+				}});
+			expect(builderSpan.attributes.find((attribute) => attribute.key === 'doubleArray'))
+				.toStrictEqual({ key: 'doubleArray', value: {
+					arrayValue: {
+						values: [
+							{ doubleValue: 1.1 },
+							{ doubleValue: 2.2 },
+							{ doubleValue: 3.3 },
+						],
+					},
+				}});
+			expect(builderSpan.attributes.find((attribute) => attribute.key === 'boolArray'))
+				.toStrictEqual({ key: 'boolArray', value: {
+					arrayValue: {
+						values: [
+							{ boolValue: true },
+							{ boolValue: false },
+							{ boolValue: true },
+						],
+					},
+				}});
+		});
+
+		test('Can add attributes and remove', async () => {
+			devWorker = await startWorker('test/scripts/api/span-builder/add-remove-attributes.ts');
+			const trace = await requestAndGetTrace(devWorker, collectorWorker, URL);
+
+			expect(trace.resourceSpans.length).toBe(1);
+			const resourceSpan = trace.resourceSpans[0];
+
+			// Check spans
+			expect(resourceSpan.scopeSpans.length).toBe(1);
+			expect(resourceSpan.scopeSpans[0].scope.name).toBe('span-builder-add-remove-attributes');
+			expect(resourceSpan.scopeSpans[0].spans.length).toBe(2);
+			const span = resourceSpan.scopeSpans[0].spans[0];
+
+			// Validate root span
+			expect(span.name).toBe('Request (fetch event)');
+			expect(span.endTimeUnixNano).not.toBe(0);
+
+			// Validate builder span
+			const builderSpan = resourceSpan.scopeSpans[0].spans[1];
+			expect(builderSpan.name).toBe('fetch');
+			expect(builderSpan.startTimeUnixNano).not.toBe(0);
+			expect(builderSpan.endTimeUnixNano).not.toBe(0);
+			expect(builderSpan.endTimeUnixNano - builderSpan.startTimeUnixNano).not.toBe(0);
+
+			// "str" was removed, we should only have 1 left
+			expect(builderSpan.attributes.length).toBe(1);
+			expect(builderSpan.attributes.find((attribute) => attribute.key === 'int'))
+				.toStrictEqual({ key: 'int', value: { intValue: 1337 } });
+		});
+
+		test('Can set status', async () => {
+			devWorker = await startWorker('test/scripts/api/span-builder/status.ts');
+			const trace = await requestAndGetTrace(devWorker, collectorWorker, URL);
+
+			expect(trace.resourceSpans.length).toBe(1);
+			const resourceSpan = trace.resourceSpans[0];
+
+			// Check spans
+			expect(resourceSpan.scopeSpans.length).toBe(1);
+			expect(resourceSpan.scopeSpans[0].scope.name).toBe('span-builder-status');
+			expect(resourceSpan.scopeSpans[0].spans.length).toBe(2);
+			const span = resourceSpan.scopeSpans[0].spans[0];
+
+			// Validate root span
+			expect(span.name).toBe('Request (fetch event)');
+			expect(span.endTimeUnixNano).not.toBe(0);
+
+			// Validate builder span
+			const builderSpan = resourceSpan.scopeSpans[0].spans[1];
+			expect(builderSpan.name).toBe('fetch');
+			expect(builderSpan.startTimeUnixNano).not.toBe(0);
+			expect(builderSpan.endTimeUnixNano).not.toBe(0);
+			expect(builderSpan.endTimeUnixNano - builderSpan.startTimeUnixNano).not.toBe(0);
+
+			// Validate status
+			expect(builderSpan.status).toStrictEqual({ code: StatusCode.OK });
+		});
+
+		test('Can add event', async () => {
+			devWorker = await startWorker('test/scripts/api/span-builder/event.ts');
+			const trace = await requestAndGetTrace(devWorker, collectorWorker, URL);
+
+			expect(trace.resourceSpans.length).toBe(1);
+			const resourceSpan = trace.resourceSpans[0];
+
+			// Check spans
+			expect(resourceSpan.scopeSpans.length).toBe(1);
+			expect(resourceSpan.scopeSpans[0].scope.name).toBe('span-builder-event');
+			expect(resourceSpan.scopeSpans[0].spans.length).toBe(2);
+			const span = resourceSpan.scopeSpans[0].spans[0];
+
+			// Validate root span
+			expect(span.name).toBe('Request (fetch event)');
+			expect(span.endTimeUnixNano).not.toBe(0);
+
+			// Validate builder span
+			const builderSpan = resourceSpan.scopeSpans[0].spans[1];
+			expect(builderSpan.name).toBe('fetch');
+			expect(builderSpan.startTimeUnixNano).not.toBe(0);
+			expect(builderSpan.endTimeUnixNano).not.toBe(0);
+			expect(builderSpan.endTimeUnixNano - builderSpan.startTimeUnixNano).not.toBe(0);
+
+			// Validate events
+			expect(builderSpan.events.length).toBe(2);
+			
+			expect(builderSpan.events[0].name).toBe('Span started');
+			expect(builderSpan.events[0].attributes.length).toBe(0);
+			expect(builderSpan.events[0].timeUnixNano).not.toBe(0);
+			
+			expect(builderSpan.events[1].name).toBe('Fetch done');
+			expect(builderSpan.events[1].attributes.length).toBe(1);
+			expect(builderSpan.events[1].attributes[0])
+				.toStrictEqual({ key: 'host', value: { stringValue: 'example.com' } });
+			expect(builderSpan.events[1].timeUnixNano).not.toBe(0);
+		});
+
+		test('Can add links', async () => {
+			devWorker = await startWorker('test/scripts/api/span-builder/links.ts');
+			const trace = await requestAndGetTrace(devWorker, collectorWorker, URL);
+
+			expect(trace.resourceSpans.length).toBe(1);
+			const resourceSpan = trace.resourceSpans[0];
+
+			// Check spans
+			expect(resourceSpan.scopeSpans.length).toBe(1);
+			expect(resourceSpan.scopeSpans[0].scope.name).toBe('span-builder-links');
+			expect(resourceSpan.scopeSpans[0].spans.length).toBe(2);
+			const span = resourceSpan.scopeSpans[0].spans[0];
+
+			// Validate root span
+			expect(span.name).toBe('Request (fetch event)');
+			expect(span.endTimeUnixNano).not.toBe(0);
+
+			// Validate builder span
+			const builderSpan = resourceSpan.scopeSpans[0].spans[1];
+			expect(builderSpan.name).toBe('fetch');
+			expect(builderSpan.startTimeUnixNano).not.toBe(0);
+			expect(builderSpan.endTimeUnixNano).not.toBe(0);
+			expect(builderSpan.endTimeUnixNano - builderSpan.startTimeUnixNano).not.toBe(0);
+
+			// Validate links
+			expect(builderSpan.links.length).toBe(2);
+
+			expect(builderSpan.links[0].traceId).toBe(span.traceId);
+			expect(builderSpan.links[0].spanId).toBe(span.spanId);
+			expect(builderSpan.links[0].attributes.length).toBe(0);
+
+			expect(builderSpan.links[1].traceId).toBe('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+			expect(builderSpan.links[1].spanId).toBe('aaaaaaaaaaaaaaaa');
+			expect(builderSpan.links[1].attributes.length).toBe(1);
+			expect(builderSpan.links[1].attributes[0])
+				.toStrictEqual({ key: 'service', value: { stringValue: 'example' } });
 		});
 	});
 });

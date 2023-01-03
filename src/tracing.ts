@@ -2,6 +2,7 @@ import { OtlpTransformer } from './transformers/otlp';
 import { ATTRIBUTE_NAME } from './utils/constants';
 import { generateSpanId, generateTraceId } from './utils/rand';
 import { traceFn } from './trace';
+import { SpanBuilder } from './builder';
 import type {
 	Attributes,
 	SpanContext,
@@ -84,6 +85,10 @@ export class Span {
 		return traceFn(this, name, fn, opts);
 	}
 
+	buildSpan(name: string) {
+		return new SpanBuilder(this, name);
+	}
+
 	setStatus(status: StatusCode, message?: string) {
 		this.#span.status = { code: status, message };
 	}
@@ -92,8 +97,8 @@ export class Span {
 		this.#span.events.push(event);
 	}
 
-	end() {
-		this.#span.duration = Date.now() - this.#span.timestamp;
+	end(timestamp?: number) {
+		this.#span.duration = (timestamp ?? Date.now()) - this.#span.timestamp;
 	}
 }
 
