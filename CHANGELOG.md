@@ -1,5 +1,24 @@
 # workers-tracing
 
+## 0.1.4
+
+### Patch Changes
+
+- [#10](https://github.com/BlobDevelopment/workers-tracing/pull/10) [`502e7c1`](https://github.com/BlobDevelopment/workers-tracing/commit/502e7c1383db35e36dc781547ca5e3153f228d9e) Thanks [@WalshyDev](https://github.com/WalshyDev)! - Added a span builder, this will allow for a more friendly experience.
+
+  Example usage:
+
+  ```
+  const span = trace.buildSpan(SPAN_NAME.KV_GET)
+  	.addAttribute('Index', i)
+  	.addAttribute(ATTRIBUTE_NAME.KV_KEY, `id:${i}`)
+  	.addLink(forLoopSpan);
+
+  span.end();
+  ```
+
+- [#11](https://github.com/BlobDevelopment/workers-tracing/pull/11) [`778c605`](https://github.com/BlobDevelopment/workers-tracing/commit/778c6052d99fe2beb4bdbe2cb5ef7dfcf4c10ffe) Thanks [@WalshyDev](https://github.com/WalshyDev)! - Fixed #9 - if `navigator` is not defined (old compat date) it will now default to "Unknown" for the runtime name.
+
 ## 0.1.3
 
 ### Patch Changes
