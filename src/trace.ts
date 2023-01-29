@@ -30,6 +30,15 @@ export function createTrace(
 		parentContext = context;
 	}
 
+	// Set the `exporter` to `transformer` if defined to keep backwards compat
+	// Likewise, set the `transformer` if `exporter` is set
+	// TODO: Remove
+	if (tracerOptions.collector.transformer && !tracerOptions.collector.exporter) {
+		tracerOptions.collector.exporter = tracerOptions.collector.transformer;
+	} else if (tracerOptions.collector.exporter && !tracerOptions.collector.transformer) {
+		tracerOptions.collector.transformer = tracerOptions.collector.exporter;
+	}
+
 	const trace = new Trace(ctx, {
 		traceContext: parentContext,
 		...tracerOptions,

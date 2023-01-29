@@ -29,7 +29,7 @@ describe('Test OTLP Exporter', () => {
 		}
 	});
 
-	test.skip('Basic trace should transform correctly', async () => {
+	test('Basic trace should transform correctly', async () => {
 		devWorker = await startWorker('test/scripts/otlp/basic.ts');
 
 		const res = await devWorker.fetch('http://worker/test');
@@ -56,7 +56,7 @@ describe('Test OTLP Exporter', () => {
 		expect(span.name).toBe('Request');
 	});
 
-	describe.skip('Resource', () => {
+	describe('Resource', () => {
 		test('Default attributes are put on resource', async () => {
 			devWorker = await startWorker('test/scripts/otlp/basic.ts');
 
@@ -136,7 +136,7 @@ describe('Test OTLP Exporter', () => {
 		});
 	});
 
-	describe.skip('Single span', () => {
+	describe('Single span', () => {
 		test('You can add a single span', async () => {
 			devWorker = await startWorker('test/scripts/otlp/single-span.ts');
 
@@ -325,7 +325,7 @@ describe('Test OTLP Exporter', () => {
 		});
 	});
 
-	describe.skip('Multiple spans', () => {
+	describe('Multiple spans', () => {
 		test('You can add multiple spans', async () => {
 			devWorker = await startWorker('test/scripts/otlp/multiple-spans.ts', {
 				kv: [ { binding: 'KV', id: '' } ],
@@ -571,7 +571,7 @@ describe('Test OTLP Exporter', () => {
 		});
 	});
 
-	describe.skip('Child of child span', () => {
+	describe('Child of child span', () => {
 		test('You can add a child to a child span', async () => {
 			devWorker = await startWorker('test/scripts/otlp/span-span.ts', {
 				kv: [ { binding: 'KV', id: '' } ],
@@ -915,5 +915,7 @@ describe('Test OTLP Exporter', () => {
 
 			await worker.stop();
 		});
+
+		test.todo('Can pass context in service binding');
 	});
 });
