@@ -49,3 +49,12 @@ export function traceFn<T>(
 	span.end();
 	return value;
 }
+
+export function tracedFetch(
+	parent: Span,
+	request: string | Request,
+	requestInit?: RequestInit | Request,
+	spanOpts?: SpanCreationOptions,
+): Promise<Response> {
+	return parent.tracedFetch(request, requestInit, spanOpts);
+}

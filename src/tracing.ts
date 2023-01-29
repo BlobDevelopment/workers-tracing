@@ -1,5 +1,5 @@
-import { OtlpTransformer } from './transformers/otlp';
-import { ATTRIBUTE_NAME } from './utils/constants';
+import { OtlpTransformer } from './exporters/otlp';
+import { ATTRIBUTE_NAME, SPAN_NAME } from './utils/constants';
 import { generateSpanId, generateTraceId } from './utils/rand';
 import { traceFn } from './trace';
 import { SpanBuilder } from './builder';
@@ -33,11 +33,19 @@ export function getDefaultAttributes(opts: TracerOptions): Attributes {
 }
 
 export class Span {
-	
+
+	#trace: Trace;
 	#span: SpanData;
 	#childSpans: Span[];
 
 	constructor(traceId: string, name: string, spanOptions?: SpanCreationOptions) {
+		// TODO: Figure out how I want to do this
+		const trace = this instanceof Trace ? this : spanOptions?.trace;
+		if (!trace) {
+			throw new Error('No Trace provided for Span');
+		}
+
+		this.#trace = trace;
 		this.#span = {
 			traceId: traceId,
 			name,
@@ -75,14 +83,35 @@ export class Span {
 
 	startSpan(name: string, spanOptions?: SpanCreationOptions): Span {
 		const span = new Span(this.#span.traceId, name, spanOptions);
+		span.#trace = this.#trace; // TODO: I hate this, fix.
 		span.#span.parentId = this.getSpanId();
 		this.#childSpans.push(span);
 
 		return span;
 	}
 
+	injectPropagation(req: Request) {
+		// TODO: Figure out a better way to get the exporter in these situations
+		const exporter = this.#trace.getTracerOptions().collector.exporter ?? new OtlpTransformer();
+
+		for (const [name, value] of Object.entries(exporter.injectContextHeaders(this))) {
+			req.headers.append(name, value);
+		}
+	}
+
 	trace<T>(name: string, fn: TracedFn<T>, opts?: SpanCreationOptions): T {
 		return traceFn(this, name, fn, opts);
+	}
+
+	tracedFetch(
+		request: string | Request,
+		requestInit?: RequestInit | Request,
+		spanOpts?: SpanCreationOptions,
+	): Promise<Response> {
+		const tracedRequest = new Request(request, requestInit);
+		this.injectPropagation(tracedRequest);
+
+		return traceFn(this, SPAN_NAME.FETCH, () => fetch(tracedRequest), spanOpts);
 	}
 
 	buildSpan(name: string) {
@@ -114,7 +143,7 @@ export class Trace extends Span {
 	) {
 		super(
 			tracerOptions.traceContext?.traceId ?? generateTraceId(),
-			'Request (fetch event)',
+			'Request',
 			{
 				parentId: tracerOptions.traceContext?.spanId,
 				...spanOptions,
