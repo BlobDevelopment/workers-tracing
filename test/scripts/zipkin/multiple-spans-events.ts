@@ -1,5 +1,5 @@
 import { createTrace } from 'src/trace';
-import { ZipkinTransformer } from 'src/transformers/zipkin';
+import { ZipkinExporter } from 'src/exporters/zipkin';
 import { SPAN_NAME } from 'src/utils/constants';
 
 interface Env {
@@ -12,7 +12,7 @@ export default {
 			serviceName: 'multiple-spans-events',
 			collector: {
 				url: 'http://0.0.0.0:9411/api/v2/spans', // Zipkin compatible Jaeger endpoint
-				transformer: new ZipkinTransformer(),
+				transformer: new ZipkinExporter(),
 			},
 		});
 

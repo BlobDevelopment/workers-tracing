@@ -1,5 +1,5 @@
-import { StatusCode } from './tracing';
-import { TraceTransformer } from './transformers/transformer';
+import { Span, StatusCode, Trace } from './tracing';
+import { Exporter } from './exporters/exporter';
 
 export interface TraceData {
 	// 8 bit field currently only used to indicate sampling
@@ -66,6 +66,8 @@ export interface SpanCreationOptions {
 	// https://www.w3.org/TR/trace-context/#parent-id
 	parentId?: string;
 
+	trace?: Trace;
+
 	// The creation time of the span, epoch unix timestamp
 	// https://opentelemetry.io/docs/reference/specification/trace/api/#timestamp
 	timestamp?: number;
@@ -126,7 +128,11 @@ export interface TracerOptions {
 export interface CollectorOptions {
 	url: string;
 	headers?: HeadersInit;
-	transformer?: TraceTransformer;
+	/**
+	 * @deprecated Use `exporter` instead
+	 */
+	transformer?: Exporter;
+	exporter?: Exporter;
 }
 
 export interface ResourceOptions {
@@ -137,4 +143,8 @@ export type CfWithTrace = IncomingRequestCfProperties & {
 	traceContext?: SpanContext;
 }
 
-export type TracedFn<T> = (...args: unknown[]) => T;
+export type TracedFn<T> = (span: Span) => T;
+
+export interface globalThis {
+	MINIFLARE?: boolean;
+}

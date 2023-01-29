@@ -1,5 +1,8 @@
-import { Trace } from 'src/tracing';
-import { TraceTransformer } from './transformer';
+import { Span, Trace } from 'src/tracing';
+import { generateSpanId } from 'src/utils/rand';
+import { isHex } from 'src/utils/hex';
+import { Exporter } from './exporter';
+import type { SpanContext } from 'src/types';
 
 export type ZipkinJson = ZipkinSpan[];
 
@@ -28,7 +31,7 @@ export interface ZipkinAnnotation {
 	value: string;
 }
 
-export class ZipkinTransformer extends TraceTransformer {
+export class ZipkinExporter extends Exporter {
 
 	transform(trace: Trace): ZipkinJson {
 		const spans: ZipkinJson = [];
@@ -63,4 +66,37 @@ export class ZipkinTransformer extends TraceTransformer {
 
 		return spans;
 	}
+
+	injectContextHeaders(span: Span): Record<string, string> {
+		// https://github.com/openzipkin/b3-propagation
+		// https://github.com/openzipkin/b3-propagation#why-is-parentspanid-propagated
+		return {
+			'X-B3-TraceId': span.getTraceId(),
+			'X-B3-ParentSpanId': span.getSpanId(), 
+			'X-B3-SpanId': generateSpanId(),
+			'X-B3-Sampled': '1', // TODO: Implement sampling
+		};
+	}
+
+	readContextHeaders(headers: Headers): SpanContext | null {
+		const traceId = headers.get('X-B3-TraceId');
+		const spanId = headers.get('X-B3-ParentSpanId');
+
+		if (!traceId || !spanId) {
+			return null;
+		}
+
+		// Validation
+		if ((traceId.length !== 32 && traceId.length !== 16)
+			|| !isHex(traceId)
+			|| spanId.length !== 16
+			|| !isHex(spanId)
+		) {
+			return null;
+		}
+
+		return { traceId, spanId };
+	}
 }
+
+export class ZipkinTransformer extends ZipkinExporter {}

@@ -1,6 +1,7 @@
 import { Span, Trace } from 'src/tracing';
-import { TraceTransformer } from './transformer';
-import type { Attribute, Attributes } from 'src/types';
+import { isHex, hexToNumber, numberToHex } from 'src/utils/hex';
+import { Exporter } from './exporter';
+import type { Attribute, Attributes, SpanContext } from 'src/types';
 
 export interface OtlpJson {
 	resourceSpans: OtlpResourceSpan[];
@@ -70,7 +71,24 @@ export interface OtlpLink {
 
 export type TransformValue = (value: Attribute) => OtlpValue | null;
 
-export class OtlpTransformer extends TraceTransformer {
+const VERSION = 0;
+
+// Flags
+const SAMPLED = 1 << 0;
+
+interface ParentTraceInfo {
+	traceparent?: string;
+	tracestate?: string;
+}
+
+export class OtlpExporter extends Exporter {
+	
+	#parentTraceInfo: ParentTraceInfo;
+
+	constructor() {
+		super();
+		this.#parentTraceInfo = {};
+	}
 
 	transform(trace: Trace): OtlpJson {
 		return {
@@ -171,6 +189,58 @@ export class OtlpTransformer extends TraceTransformer {
 		};
 	}
 
+	injectContextHeaders(span: Span): Record<string, string> {
+		const flags = 0;
+		// TODO: Implement sampling
+		// if (sampled) flags |= SAMPLED
+
+		return {
+			traceparent: `${numberToHex(VERSION, 2)}-${span.getTraceId()}-${span.getSpanId()}-${numberToHex(flags, 2)}`,
+		};
+	}
+
+	readContextHeaders(headers: Headers): SpanContext | null {
+		const traceparent = headers.get('traceparent');
+		if (traceparent === null) return null;
+
+		const parts = traceparent.split('-');
+
+		// We expect at least 4 parts for version 0
+		// <version>-<trace-id>-<span-id>-<flags>
+		if (parts.length < 4) {
+			return null;
+		}
+
+		const version = hexToNumber(parts[0]);
+		const traceId = parts[1];
+		const spanId = parts[2];
+		const flags = parts[3];
+
+		// Field validation failed
+		if (version === null
+			|| parts[0].length !== 2 // Version needs to be 2 hex chars
+			|| traceId.length !== 32
+			|| !isHex(traceId)
+			|| spanId.length !== 16
+			|| !isHex(spanId)
+			|| flags.length !== 2
+			|| !isHex(flags)
+		) {
+			return null;
+		}
+
+		// Valid :)
+		this.#parentTraceInfo.traceparent = traceparent;
+
+		// https://www.w3.org/TR/trace-context/#tracestate-header
+		const tracestate = headers.get('tracestate');
+		if (tracestate !== null) {
+			this.#parentTraceInfo.tracestate = tracestate;
+		}
+
+		return { traceId, spanId };
+	}
+
 	collectSpans(span: Span): Span[] {
 		const spans = [];
 
@@ -184,3 +254,8 @@ export class OtlpTransformer extends TraceTransformer {
 		return spans;
 	}
 }
+
+/**
+ * @deprecated Use OtlpExporter
+ */
+export class OtlpTransformer extends OtlpExporter {}

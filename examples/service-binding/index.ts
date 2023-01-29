@@ -26,7 +26,11 @@ export default {
 
 		const serviceBindingSpan = span.startSpan(SPAN_NAME.SERVICE_FETCH, { attributes: { service: 'basic' } });
 		const res = await env.SERVICE.fetch('https://service/test', {
-			headers: { 'x-trace-id': `${serviceBindingSpan.getContext().traceId}:${serviceBindingSpan.getContext().spanId}` },
+			cf: {
+				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+				// @ts-ignore
+				spanContext: serviceBindingSpan.getContext(),
+			},
 		});
 		serviceBindingSpan.end();
 

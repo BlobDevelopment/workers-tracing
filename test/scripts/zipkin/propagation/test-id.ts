@@ -6,14 +6,16 @@ interface Env {}
 export default {
 	async fetch(req: Request, env: Env, ctx: ExecutionContext) {
 		const trace = createTrace(req, env, ctx, {
-			serviceName: 'zipkin-basic',
+			serviceName: 'test-ids',
 			collector: {
 				url: 'http://0.0.0.0:9411/api/v2/spans', // Zipkin compatible Jaeger endpoint
-				transformer: new ZipkinExporter(),
+				exporter: new ZipkinExporter(),
 			},
 		});
 
-		await trace.send();
-		return new Response('ok', { headers: { 'x-trace-id': trace.getTraceId() } });
+		return Response.json({
+			traceId: trace.getTraceId(),
+			parentId: trace.getData().parentId,
+		});
 	},
 };
