@@ -144,3 +144,7 @@ export type CfWithTrace = IncomingRequestCfProperties & {
 }
 
 export type TracedFn<T> = (span: Span) => T;
+
+export interface globalThis {
+	MINIFLARE?: boolean;
+}

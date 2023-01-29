@@ -5,6 +5,7 @@ import { traceFn } from './trace';
 import { SpanBuilder } from './builder';
 import type {
 	Attributes,
+	globalThis,
 	SpanContext,
 	SpanCreationOptions,
 	SpanData,
@@ -190,8 +191,9 @@ export class Trace extends Span {
 		}
 		headers.append('content-type', 'application/json');
 
+		// Tests
 		// TODO: Properly pass trace context down and update the tests
-		if (!headers.has('x-trace-id')) {
+		if ((globalThis as globalThis).MINIFLARE && !headers.has('x-trace-id')) {
 			headers.append('x-trace-id', this.getTraceId());
 		}
 
