@@ -1,6 +1,6 @@
 import { expect } from 'vitest';
 import { UnstableDevWorker } from 'wrangler';
-import { OtlpJson } from '../../src/transformers/otlp';
+import { OtlpJson } from '../../src/exporters/otlp';
 
 export async function requestAndGetTrace<T = OtlpJson>(
 	devWorker: UnstableDevWorker,

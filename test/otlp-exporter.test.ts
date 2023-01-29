@@ -1,4 +1,4 @@
-import { OtlpJson } from 'src/transformers/otlp';
+import { OtlpJson } from 'src/exporters/otlp';
 import { ATTRIBUTE_NAME, SPAN_NAME } from 'src/utils/constants';
 import { afterAll, afterEach, beforeAll, describe, expect, test } from 'vitest';
 import { UnstableDevWorker } from 'wrangler';

@@ -1,5 +1,5 @@
 import { createTrace } from 'src/trace';
-import { ZipkinTransformer } from 'src/transformers/zipkin';
+import { ZipkinTransformer } from 'src/exporters/zipkin';
 import { SPAN_NAME } from 'src/utils/constants';
 
 interface Env {}
