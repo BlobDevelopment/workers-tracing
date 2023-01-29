@@ -195,7 +195,7 @@ export class OtlpExporter extends Exporter {
 		// if (sampled) flags |= SAMPLED
 
 		return {
-			traceparent: `${numberToHex(VERSION, 2)}-${span.getTraceId()}-${span.getSpanId()}-${numberToHex(flags)}`,
+			traceparent: `${numberToHex(VERSION, 2)}-${span.getTraceId()}-${span.getSpanId()}-${numberToHex(flags, 2)}`,
 		};
 	}
 

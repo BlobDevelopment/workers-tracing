@@ -110,10 +110,12 @@ export class Span {
 		requestInit?: RequestInit | Request,
 		spanOpts?: SpanCreationOptions,
 	): Promise<Response> {
-		const tracedRequest = new Request(request, requestInit);
-		this.injectPropagation(tracedRequest);
+		return traceFn(this, SPAN_NAME.FETCH, (span) => {
+			const tracedRequest = new Request(request, requestInit);
 
-		return traceFn(this, SPAN_NAME.FETCH, () => fetch(tracedRequest), spanOpts);
+			span.injectPropagation(tracedRequest);
+			return fetch(tracedRequest);
+		}, spanOpts);
 	}
 
 	buildSpan(name: string) {

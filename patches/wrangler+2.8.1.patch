@@ -1,0 +1,17 @@
+diff --git a/node_modules/wrangler/wrangler-dist/cli.js b/node_modules/wrangler/wrangler-dist/cli.js
+index 03ad293..78577e8 100644
+--- a/node_modules/wrangler/wrangler-dist/cli.js
++++ b/node_modules/wrangler/wrangler-dist/cli.js
+@@ -144677,7 +144677,11 @@ function parseRequestInput(readyAddress, readyPort, input, init, protocol = "htt
+     input = `${protocol}://${readyAddress}:${readyPort}${input.pathname}`;
+   } else if (typeof input === "string") {
+     try {
+-      input = `${protocol}://${readyAddress}:${readyPort}${new URL(input).pathname}`;
++      const url = new URL(input);
++      url.protocol = `${protocol}:`;
++      url.hostname = readyAddress;
++      url.port = readyPort;
++      input = url.toString();
+     } catch {
+       input = `${protocol}://${readyAddress}:${readyPort}${input}`;
+     }

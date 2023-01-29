@@ -1,4 +1,4 @@
-const HEX_REGEX = /[a-f0-9]+/g;
+const HEX_REGEX = /[a-f0-9]+/;
 
 export function isHex(str: string) {
 	return HEX_REGEX.test(str);

@@ -1,3 +1,4 @@
+import { OtlpExporter } from './exporters/otlp';
 import { Span, Trace } from './tracing';
 import { CfWithTrace, SpanContext, SpanCreationOptions, TracedFn, TracerOptions } from './types';
 
@@ -23,6 +24,12 @@ export function createTrace(
 		}
 	}
 
+	const exporter = tracerOptions.collector.exporter ?? new OtlpExporter();
+	const context = exporter.readContextHeaders(req.headers);
+	if (context !== null) {
+		parentContext = context;
+	}
+
 	const trace = new Trace(ctx, {
 		traceContext: parentContext,
 		...tracerOptions,
@@ -39,13 +46,13 @@ export function traceFn<T>(
 ): T {
 	const span = parent.startSpan(name, opts);
 
-	const value = fn();
+	const value = fn(span);
 
 	if (value instanceof Promise) {
 		value.finally(() => span.end());
 		return value;
 	}
-	
+
 	span.end();
 	return value;
 }

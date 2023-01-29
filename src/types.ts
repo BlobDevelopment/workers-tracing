@@ -1,4 +1,4 @@
-import { StatusCode, Trace } from './tracing';
+import { Span, StatusCode, Trace } from './tracing';
 import { Exporter } from './exporters/exporter';
 
 export interface TraceData {
@@ -143,4 +143,4 @@ export type CfWithTrace = IncomingRequestCfProperties & {
 	traceContext?: SpanContext;
 }
 
-export type TracedFn<T> = (...args: unknown[]) => T;
+export type TracedFn<T> = (span: Span) => T;
