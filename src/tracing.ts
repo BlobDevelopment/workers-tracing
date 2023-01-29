@@ -82,8 +82,10 @@ export class Span {
 	}
 
 	startSpan(name: string, spanOptions?: SpanCreationOptions): Span {
-		const span = new Span(this.#span.traceId, name, spanOptions);
-		span.#trace = this.#trace; // TODO: I hate this, fix.
+		const span = new Span(this.#span.traceId, name, {
+			trace: this.#trace,
+			...spanOptions,
+		});
 		span.#span.parentId = this.getSpanId();
 		this.#childSpans.push(span);
 
