@@ -132,7 +132,7 @@ describe('API', () => {
 				const span = resourceSpan.scopeSpans[0].spans[0];
 
 				// Validate root span
-				expect(span.name).toBe('Request (fetch event)');
+				expect(span.name).toBe('Request');
 				expect(span.endTimeUnixNano).not.toBe(0);
 			});
 
@@ -184,7 +184,7 @@ describe('API', () => {
 				const span = resourceSpan.scopeSpans[0].spans[0];
 
 				// Validate root span
-				expect(span.name).toBe('Request (fetch event)');
+				expect(span.name).toBe('Request');
 				expect(span.endTimeUnixNano).not.toBe(0);
 			});
 
@@ -231,7 +231,7 @@ describe('API', () => {
 				const span = resourceSpan.scopeSpans[0].spans[0];
 
 				// Validate root span
-				expect(span.name).toBe('Request (fetch event)');
+				expect(span.name).toBe('Request');
 				expect(span.endTimeUnixNano).not.toBe(0);
 
 				// Validate custom attributes
@@ -268,7 +268,7 @@ describe('API', () => {
 				const span = resourceSpan.scopeSpans[0].spans[0];
 
 				// Validate root span
-				expect(span.name).toBe('Request (fetch event)');
+				expect(span.name).toBe('Request');
 				expect(span.endTimeUnixNano).not.toBe(0);
 
 				// Validate status
@@ -300,7 +300,7 @@ describe('API', () => {
 				const span = resourceSpan.scopeSpans[0].spans[0];
 
 				// Validate root span
-				expect(span.name).toBe('Request (fetch event)');
+				expect(span.name).toBe('Request');
 				expect(span.endTimeUnixNano).not.toBe(0);
 
 				// Validate events
@@ -334,7 +334,7 @@ describe('API', () => {
 				const span = resourceSpan.scopeSpans[0].spans[0];
 
 				// Validate root span
-				expect(span.name).toBe('Request (fetch event)');
+				expect(span.name).toBe('Request');
 				expect(span.endTimeUnixNano).not.toBe(0);
 
 				// Validate links
@@ -461,7 +461,7 @@ describe('API', () => {
 			const span = resourceSpan.scopeSpans[0].spans[0];
 
 			// Validate root span
-			expect(span.name).toBe('Request (fetch event)');
+			expect(span.name).toBe('Request');
 			expect(span.endTimeUnixNano).not.toBe(0);
 
 			// Validate builder span
@@ -486,7 +486,7 @@ describe('API', () => {
 			const span = resourceSpan.scopeSpans[0].spans[0];
 
 			// Validate root span
-			expect(span.name).toBe('Request (fetch event)');
+			expect(span.name).toBe('Request');
 			expect(span.endTimeUnixNano).not.toBe(0);
 
 			// Validate builder span
@@ -566,7 +566,7 @@ describe('API', () => {
 			const span = resourceSpan.scopeSpans[0].spans[0];
 
 			// Validate root span
-			expect(span.name).toBe('Request (fetch event)');
+			expect(span.name).toBe('Request');
 			expect(span.endTimeUnixNano).not.toBe(0);
 
 			// Validate builder span
@@ -596,7 +596,7 @@ describe('API', () => {
 			const span = resourceSpan.scopeSpans[0].spans[0];
 
 			// Validate root span
-			expect(span.name).toBe('Request (fetch event)');
+			expect(span.name).toBe('Request');
 			expect(span.endTimeUnixNano).not.toBe(0);
 
 			// Validate builder span
@@ -624,7 +624,7 @@ describe('API', () => {
 			const span = resourceSpan.scopeSpans[0].spans[0];
 
 			// Validate root span
-			expect(span.name).toBe('Request (fetch event)');
+			expect(span.name).toBe('Request');
 			expect(span.endTimeUnixNano).not.toBe(0);
 
 			// Validate builder span
@@ -662,7 +662,7 @@ describe('API', () => {
 			const span = resourceSpan.scopeSpans[0].spans[0];
 
 			// Validate root span
-			expect(span.name).toBe('Request (fetch event)');
+			expect(span.name).toBe('Request');
 			expect(span.endTimeUnixNano).not.toBe(0);
 
 			// Validate builder span

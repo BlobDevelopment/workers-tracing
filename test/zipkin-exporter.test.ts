@@ -44,7 +44,7 @@ describe('Test Zipkin Exporter', () => {
 
 		const span = trace[0];
 		expect(span.traceId).toBe(traceId);
-		expect(span.name).toBe('Request (fetch event)');
+		expect(span.name).toBe('Request');
 		expect(span.localEndpoint.serviceName).toBe('zipkin-basic');
 	});
 
@@ -66,7 +66,7 @@ describe('Test Zipkin Exporter', () => {
 
 			const span = trace[0];
 			expect(span.traceId).toBe(traceId);
-			expect(span.name).toBe('Request (fetch event)');
+			expect(span.name).toBe('Request');
 			expect(span.localEndpoint.serviceName).toBe('zipkin-basic');
 
 			// Check attributes
@@ -94,7 +94,7 @@ describe('Test Zipkin Exporter', () => {
 
 			const span = trace[0];
 			expect(span.traceId).toBe(traceId);
-			expect(span.name).toBe('Request (fetch event)');
+			expect(span.name).toBe('Request');
 			expect(span.localEndpoint.serviceName).toBe('resource-attributes');
 
 			// Check attributes
@@ -131,7 +131,7 @@ describe('Test Zipkin Exporter', () => {
 			// Root span
 			const rootSpan = trace[0];
 			expect(rootSpan.traceId).toBe(traceId);
-			expect(rootSpan.name).toBe('Request (fetch event)');
+			expect(rootSpan.name).toBe('Request');
 			expect(rootSpan.localEndpoint.serviceName).toBe('single-span');
 
 			// Child span
@@ -163,7 +163,7 @@ describe('Test Zipkin Exporter', () => {
 			// Root span
 			const rootSpan = trace[0];
 			expect(rootSpan.traceId).toBe(traceId);
-			expect(rootSpan.name).toBe('Request (fetch event)');
+			expect(rootSpan.name).toBe('Request');
 			expect(rootSpan.localEndpoint.serviceName).toBe('single-span-attributes');
 
 			// Child span
@@ -196,7 +196,7 @@ describe('Test Zipkin Exporter', () => {
 			// Root span
 			const rootSpan = trace[0];
 			expect(rootSpan.traceId).toBe(traceId);
-			expect(rootSpan.name).toBe('Request (fetch event)');
+			expect(rootSpan.name).toBe('Request');
 			expect(rootSpan.localEndpoint.serviceName).toBe('single-span-events');
 
 			// Child span
@@ -235,7 +235,7 @@ describe('Test Zipkin Exporter', () => {
 			// Root span
 			const rootSpan = trace[0];
 			expect(rootSpan.traceId).toBe(traceId);
-			expect(rootSpan.name).toBe('Request (fetch event)');
+			expect(rootSpan.name).toBe('Request');
 			expect(rootSpan.localEndpoint.serviceName).toBe('single-span-attributes-and-events');
 
 			// Child span
@@ -279,7 +279,7 @@ describe('Test Zipkin Exporter', () => {
 			// Root span
 			const rootSpan = trace[0];
 			expect(rootSpan.traceId).toBe(traceId);
-			expect(rootSpan.name).toBe('Request (fetch event)');
+			expect(rootSpan.name).toBe('Request');
 			expect(rootSpan.localEndpoint.serviceName).toBe('multiple-spans');
 
 			// First child span
@@ -320,7 +320,7 @@ describe('Test Zipkin Exporter', () => {
 			// Root span
 			const rootSpan = trace[0];
 			expect(rootSpan.traceId).toBe(traceId);
-			expect(rootSpan.name).toBe('Request (fetch event)');
+			expect(rootSpan.name).toBe('Request');
 			expect(rootSpan.localEndpoint.serviceName).toBe('multiple-spans-attributes');
 
 			// First child span
@@ -363,7 +363,7 @@ describe('Test Zipkin Exporter', () => {
 			// Root span
 			const rootSpan = trace[0];
 			expect(rootSpan.traceId).toBe(traceId);
-			expect(rootSpan.name).toBe('Request (fetch event)');
+			expect(rootSpan.name).toBe('Request');
 			expect(rootSpan.localEndpoint.serviceName).toBe('multiple-spans-events');
 
 			// First child span
@@ -416,7 +416,7 @@ describe('Test Zipkin Exporter', () => {
 			// Root span
 			const rootSpan = trace[0];
 			expect(rootSpan.traceId).toBe(traceId);
-			expect(rootSpan.name).toBe('Request (fetch event)');
+			expect(rootSpan.name).toBe('Request');
 			expect(rootSpan.localEndpoint.serviceName).toBe('multiple-spans-attributes-and-events');
 
 			// First child span
@@ -473,7 +473,7 @@ describe('Test Zipkin Exporter', () => {
 			// Root span
 			const rootSpan = trace[0];
 			expect(rootSpan.traceId).toBe(traceId);
-			expect(rootSpan.name).toBe('Request (fetch event)');
+			expect(rootSpan.name).toBe('Request');
 			expect(rootSpan.localEndpoint.serviceName).toBe('span-span');
 
 			// First child span
@@ -515,7 +515,7 @@ describe('Test Zipkin Exporter', () => {
 			// Root span
 			const rootSpan = trace[0];
 			expect(rootSpan.traceId).toBe(traceId);
-			expect(rootSpan.name).toBe('Request (fetch event)');
+			expect(rootSpan.name).toBe('Request');
 			expect(rootSpan.localEndpoint.serviceName).toBe('span-span-attributes');
 
 			// First child span
@@ -559,7 +559,7 @@ describe('Test Zipkin Exporter', () => {
 			// Root span
 			const rootSpan = trace[0];
 			expect(rootSpan.traceId).toBe(traceId);
-			expect(rootSpan.name).toBe('Request (fetch event)');
+			expect(rootSpan.name).toBe('Request');
 			expect(rootSpan.localEndpoint.serviceName).toBe('span-span-events');
 
 			// First child span
@@ -613,7 +613,7 @@ describe('Test Zipkin Exporter', () => {
 			// Root span
 			const rootSpan = trace[0];
 			expect(rootSpan.traceId).toBe(traceId);
-			expect(rootSpan.name).toBe('Request (fetch event)');
+			expect(rootSpan.name).toBe('Request');
 			expect(rootSpan.localEndpoint.serviceName).toBe('span-span-attributes-and-events');
 
 			// First child span

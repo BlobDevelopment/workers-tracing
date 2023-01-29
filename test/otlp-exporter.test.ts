@@ -51,7 +51,7 @@ describe('Test OTLP Exporter', () => {
 		
 		const span = resourceSpan.scopeSpans[0].spans[0];
 		expect(span.traceId).toBe(traceId);
-		expect(span.name).toBe('Request (fetch event)');
+		expect(span.name).toBe('Request');
 	});
 
 	describe('Resource', () => {
@@ -163,7 +163,7 @@ describe('Test OTLP Exporter', () => {
 			// Root span
 			const rootSpan = spans[0];
 			expect(rootSpan.traceId).toBe(traceId);
-			expect(rootSpan.name).toBe('Request (fetch event)');
+			expect(rootSpan.name).toBe('Request');
 			expect(rootSpan.endTimeUnixNano).not.toBe(0);
 
 			// Child span
@@ -202,7 +202,7 @@ describe('Test OTLP Exporter', () => {
 			// Root span
 			const rootSpan = spans[0];
 			expect(rootSpan.traceId).toBe(traceId);
-			expect(rootSpan.name).toBe('Request (fetch event)');
+			expect(rootSpan.name).toBe('Request');
 			expect(rootSpan.endTimeUnixNano).not.toBe(0);
 
 			// Child span
@@ -243,7 +243,7 @@ describe('Test OTLP Exporter', () => {
 			// Root span
 			const rootSpan = spans[0];
 			expect(rootSpan.traceId).toBe(traceId);
-			expect(rootSpan.name).toBe('Request (fetch event)');
+			expect(rootSpan.name).toBe('Request');
 			expect(rootSpan.endTimeUnixNano).not.toBe(0);
 
 			// Child span
@@ -296,7 +296,7 @@ describe('Test OTLP Exporter', () => {
 			// Root span
 			const rootSpan = spans[0];
 			expect(rootSpan.traceId).toBe(traceId);
-			expect(rootSpan.name).toBe('Request (fetch event)');
+			expect(rootSpan.name).toBe('Request');
 			expect(rootSpan.endTimeUnixNano).not.toBe(0);
 
 			// Child span
@@ -354,7 +354,7 @@ describe('Test OTLP Exporter', () => {
 			// Root span
 			const rootSpan = spans[0];
 			expect(rootSpan.traceId).toBe(traceId);
-			expect(rootSpan.name).toBe('Request (fetch event)');
+			expect(rootSpan.name).toBe('Request');
 			expect(rootSpan.endTimeUnixNano).not.toBe(0);
 
 			// First child span
@@ -402,7 +402,7 @@ describe('Test OTLP Exporter', () => {
 			// Root span
 			const rootSpan = spans[0];
 			expect(rootSpan.traceId).toBe(traceId);
-			expect(rootSpan.name).toBe('Request (fetch event)');
+			expect(rootSpan.name).toBe('Request');
 			expect(rootSpan.endTimeUnixNano).not.toBe(0);
 
 			// First child span
@@ -454,7 +454,7 @@ describe('Test OTLP Exporter', () => {
 			// Root span
 			const rootSpan = spans[0];
 			expect(rootSpan.traceId).toBe(traceId);
-			expect(rootSpan.name).toBe('Request (fetch event)');
+			expect(rootSpan.name).toBe('Request');
 			expect(rootSpan.endTimeUnixNano).not.toBe(0);
 
 			// First child span
@@ -524,7 +524,7 @@ describe('Test OTLP Exporter', () => {
 			// Root span
 			const rootSpan = spans[0];
 			expect(rootSpan.traceId).toBe(traceId);
-			expect(rootSpan.name).toBe('Request (fetch event)');
+			expect(rootSpan.name).toBe('Request');
 			expect(rootSpan.endTimeUnixNano).not.toBe(0);
 
 			// First child span
@@ -600,7 +600,7 @@ describe('Test OTLP Exporter', () => {
 			// Root span
 			const rootSpan = spans[0];
 			expect(rootSpan.traceId).toBe(traceId);
-			expect(rootSpan.name).toBe('Request (fetch event)');
+			expect(rootSpan.name).toBe('Request');
 			expect(rootSpan.endTimeUnixNano).not.toBe(0);
 
 			// First child span
@@ -649,7 +649,7 @@ describe('Test OTLP Exporter', () => {
 			// Root span
 			const rootSpan = spans[0];
 			expect(rootSpan.traceId).toBe(traceId);
-			expect(rootSpan.name).toBe('Request (fetch event)');
+			expect(rootSpan.name).toBe('Request');
 			expect(rootSpan.endTimeUnixNano).not.toBe(0);
 
 			// First child span
@@ -702,7 +702,7 @@ describe('Test OTLP Exporter', () => {
 			// Root span
 			const rootSpan = spans[0];
 			expect(rootSpan.traceId).toBe(traceId);
-			expect(rootSpan.name).toBe('Request (fetch event)');
+			expect(rootSpan.name).toBe('Request');
 			expect(rootSpan.endTimeUnixNano).not.toBe(0);
 
 			// First child span
@@ -773,7 +773,7 @@ describe('Test OTLP Exporter', () => {
 			// Root span
 			const rootSpan = spans[0];
 			expect(rootSpan.traceId).toBe(traceId);
-			expect(rootSpan.name).toBe('Request (fetch event)');
+			expect(rootSpan.name).toBe('Request');
 			expect(rootSpan.endTimeUnixNano).not.toBe(0);
 
 			// First child span
