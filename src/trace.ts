@@ -9,21 +9,14 @@ export function createTrace(
 	tracerOptions: TracerOptions,
 	spanOptions?: SpanCreationOptions,
 ): Trace {
-	// This is ugly
-	// TODO: Fix this - https://www.w3.org/TR/trace-context/#traceparent-header
-	// https://zipkin.io/pages/architecture.html - https://github.com/openzipkin/b3-propagation#overall-process
 	// This parent context will allow properly tracing across services (and other Workers)
 	let parentContext: SpanContext | undefined;
+	// Allow passing SpanContext through the `cf` object for service bindings
 	if ((req.cf as CfWithTrace)?.traceContext) {
 		parentContext = (req.cf as CfWithTrace)?.traceContext;
 	}
-	if (req.headers.get('x-trace-id')) {
-		const ids = req.headers.get('x-trace-id')?.split(':', 2);
-		if (ids?.length === 2) {
-			parentContext = { traceId: ids[0], spanId: ids[1] };
-		}
-	}
 
+	// Read context from the spec-compliant ways
 	const exporter = tracerOptions.collector.exporter ?? new OtlpExporter();
 	const context = exporter.readContextHeaders(req.headers);
 	if (context !== null) {
