@@ -29,7 +29,7 @@ export interface ZipkinAnnotation {
 	value: string;
 }
 
-export class ZipkinTransformer extends Exporter {
+export class ZipkinExporter extends Exporter {
 
 	transform(trace: Trace): ZipkinJson {
 		const spans: ZipkinJson = [];
@@ -75,3 +75,5 @@ export class ZipkinTransformer extends Exporter {
 		};
 	}
 }
+
+export class ZipkinTransformer extends ZipkinExporter {}

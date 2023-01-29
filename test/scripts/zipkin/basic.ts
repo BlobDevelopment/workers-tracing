@@ -1,5 +1,5 @@
 import { createTrace } from 'src/trace';
-import { ZipkinTransformer } from 'src/exporters/zipkin';
+import { ZipkinExporter } from 'src/exporters/zipkin';
 
 interface Env {}
 
@@ -9,7 +9,7 @@ export default {
 			serviceName: 'zipkin-basic',
 			collector: {
 				url: 'http://0.0.0.0:9411/api/v2/spans', // Zipkin compatible Jaeger endpoint
-				transformer: new ZipkinTransformer(),
+				transformer: new ZipkinExporter(),
 			},
 		});
 
