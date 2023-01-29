@@ -1,5 +1,5 @@
 import { createTrace } from 'src/trace';
-import { OtlpTransformer } from 'src/transformers/otlp';
+import { OtlpTransformer } from 'src/exporters/otlp';
 
 interface Env {}
 

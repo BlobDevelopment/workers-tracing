@@ -1,5 +1,6 @@
-import { Trace } from 'src/tracing';
-import { TraceTransformer } from './transformer';
+import { Span, Trace } from 'src/tracing';
+import { generateSpanId } from 'src/utils/rand';
+import { Exporter } from './exporter';
 
 export type ZipkinJson = ZipkinSpan[];
 
@@ -28,7 +29,7 @@ export interface ZipkinAnnotation {
 	value: string;
 }
 
-export class ZipkinTransformer extends TraceTransformer {
+export class ZipkinTransformer extends Exporter {
 
 	transform(trace: Trace): ZipkinJson {
 		const spans: ZipkinJson = [];
@@ -62,5 +63,15 @@ export class ZipkinTransformer extends TraceTransformer {
 		}
 
 		return spans;
+	}
+
+	getContextHeaders(span: Span): Record<string, string> {
+		// https://github.com/openzipkin/b3-propagation
+		return {
+			'X-B3-TraceId': span.getTraceId(),
+			'X-B3-ParentSpanId': span.getSpanId(), 
+			'X-B3-SpanId': generateSpanId(), // TODO: Figure out what I want to do here
+			'X-B3-Sampled': '1', // TODO: Implement sampling
+		};
 	}
 }
